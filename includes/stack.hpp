@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.hpp                                         :+:      :+:    :+:   */
+/*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/13 19:32:40 by rponsonn         ###   ########.fr       */
+/*   Created: 2022/05/15 18:07:06 by rponsonn          #+#    #+#             */
+/*   Updated: 2022/05/15 18:39:39 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VECTOR_HPP
-# define VECTOR_HPP
-#include <memory>//allocator
-//must implement
-//Vector
-//Map
-//Stack
-namespace ft 
+#ifndef STACK_HPP
+# define STACK_HPP
+#include <vector>
+namespace ft
 {
-	template <typename T, typename A = std::allocator<T> >
-	class vector
+	template <typename T, typename container = std::vector<T> >
+	class stack
 	{
-		public:
-	}
-}
+
+	};
+} // namespace ft
+
 #endif
