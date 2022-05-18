@@ -6,18 +6,18 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/17 16:50:29 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/18 15:37:33 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#if 0 //CREATE A REAL STL EXAMPLE
+#if 1 //CREATE A REAL STL EXAMPLE
+	namespace ft = std;
 	#include <map>
 	#include <stack>
 	#include <vector>
-	namespace ft = std;
 #else
 	#include "includes/map.hpp"
 	#include "includes/stack.hpp"
