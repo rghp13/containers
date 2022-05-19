@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 18:07:06 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/18 22:18:01 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/19 22:05:34 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ namespace ft
 	class stack
 	{
 		public:
+		//types
 		typedef T value_type;
 		typedef Container container_type;
 		typedef size_t	size_type;
@@ -41,9 +42,39 @@ namespace ft
 	{	return (_ctnr.push_back(value));}
 	void		pop(void)
 	{	_ctnr.pop_back();}
-		protected:
+		private:
+		friend bool operator==(const stack &lhs, const stack &rhs)
+		{
+			return (lhs._ctnr == rhs._ctnr);
+		}
+		friend bool operator<(const stack &lhs, const stack &rhs)
+		{
+			return (lhs._ctnr < rhs._ctnr);
+		}
 		container_type _ctnr;
 	};
+	//operator != <= > >=
+	//needs template
+	template <typename T, class container>
+	bool operator!=(const stack<T, container> &lhs, const stack<T, container> &rhs)
+	{
+		return (!(lhs == rhs));
+	}
+	template <typename T, class container>
+	bool operator<=(const stack<T, container> &lhs, const stack<T, container> &rhs)
+	{
+		return (!(rhs < lhs));
+	}
+	template <typename T, class container>
+	bool operator>(const stack<T, container> &lhs, const stack<T, container> &rhs)
+	{
+		return (rhs < lhs);
+	}
+	template <typename T, class container>
+	bool operator>=(const stack<T, container> &lhs, const stack<T, container> &rhs)
+	{
+		return (!(lhs < rhs));
+	}
 } // namespace ft
 
 #endif
