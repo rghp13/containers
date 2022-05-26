@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/23 22:26:15 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/26 02:22:03 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,61 @@
 # define ITERATOR_HPP
 #include <iterator>
 #include <vector>
-std::vector<int> qwe;
 namespace ft
 {
-	//just used to implement reverse iterator which takes iterator and inverts all methods
+	//set up tags
+	struct	input_iterator_tag {};
+	struct	output_iterator_tag {};
+	struct	forward_iterator_tag : public input_iterator_tag {};
+	struct	bidirectional_iterator_tag : public forward_iterator_tag {};
+	struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
+
+	template<typename Category, class T, class Distance = ptrdiff_t,
+			 typename _Pointer = T*, class _Refererence = T&>
+	struct iterator
+	{
+		typedef	Category		iterator_category;
+		typedef	T				value_type;
+		typedef	Distance		difference_type;
+		typedef	_Pointer		pointer;
+		typedef	_Refererence	reference;
+	};
+	template<class Iterator>
+	struct iterator_traits
+	{
+		typedef typename		iterator::iterator_category	iterator_category;
+		typedef typename		iterator::value_type		value_type;
+		typedef typename		iterator::difference_type	difference_type;
+		typedef typename		iterator::pointer			pointer;
+		typedef	typename		iterator::reference			reference;
+	};
+	template <class _Tp>
+	struct	iterator_traits<_Tp*>
+	{
+		typedef random_access_iterator_tag	iterator_category;
+		typedef	_Tp							value_type;
+		typedef	ptrdiff_t					difference_type;
+		typedef	_Tp*						pointer;
+		typedef	_Tp&						reference;
+	};
+	template <class _Tp>
+	struct	iterator_traits<const _Tp*>
+	{
+		typedef random_access_iterator_tag	iterator_category;
+		typedef	_Tp							value_type;
+		typedef	ptrdiff_t					difference_type;
+		typedef	const _Tp*					pointer;
+		typedef	const _Tp&					reference;
+	};
+	template <class T>
+	class	random_access_iterator : private ft::iterator<random_access_iterator_tag, T>
+	{
+		public:
+		typedef	T	value_type;
+		typedef	T*	pointer;
+		typedef	T&	reference;
+		typedef	typename	ft::iterator<random_access_iterator, T>::difference_type	difference_type;//resume here
+	};
 	template<class Iter>
 	struct iterator_traits
 	{
