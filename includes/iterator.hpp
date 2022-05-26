@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/26 02:22:03 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/26 23:19:13 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,19 @@ namespace ft
 		typedef	const _Tp&					reference;
 	};
 	template <class T>
-	class	random_access_iterator : private ft::iterator<random_access_iterator_tag, T>
+	class	random_access_iterator : public ft::iterator<random_access_iterator_tag, T>//public or private?
 	{
 		public:
-		typedef	T	value_type;
-		typedef	T*	pointer;
-		typedef	T&	reference;
-		typedef	typename	ft::iterator<random_access_iterator, T>::difference_type	difference_type;//resume here
+		typedef	T			value_type;
+		typedef	T*			pointer;
+		typedef	T&			reference;
+		typedef	typename	ft::iterator<random_access_iterator_tag, T>::difference_type	difference_type;
+		typedef typename	ft::iterator<random_access_iterator_tag, T>::iterator_category	iterator_category;
+		private :
+		pointer _ptr;
+		public:
+		//construct
+		random_access_iterator() : _ptr(0)
 	};
 	template<class Iter>
 	struct iterator_traits
