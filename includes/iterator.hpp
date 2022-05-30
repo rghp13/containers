@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/26 23:19:13 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/30 21:09:43 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,14 @@ namespace ft
 		pointer _ptr;
 		public:
 		//construct
-		random_access_iterator() : _ptr(0)
-	};
-	template<class Iter>
-	struct iterator_traits
-	{
-		typedef typename Iter::difference_type difference_type;
-		typedef typename Iter::value_type value_type;
-		typedef typename Iter::pointer pointer;
-		typedef typename Iter::reference reference;
-		typedef typename Iter::iterator_category iterator_category;
+		random_access_iterator() : _ptr(0) {}
+		random_access_iterator(pointer ptr) : _ptr(ptr) {}
+		random_access_iterator(random_access_iterator const &src) : _ptr(src._ptr) {}
+		pointer	base() const	{return(_ptr);}
+		//overload * -> and []
+		reference	operator*()		{return(*_ptr);}//read stl_iterator.h and stl_vector.h
+		pointer		operator->()	{return(_ptr);}
+		reference	operator[](difference_type dif const) const {return(*(_ptr + dif));}
 	};
 } // namespace ft
 
