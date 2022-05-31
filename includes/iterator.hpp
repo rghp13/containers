@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/30 21:09:43 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/05/31 22:29:45 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,63 @@ namespace ft
 	template <class T>
 	class	random_access_iterator : public ft::iterator<random_access_iterator_tag, T>//public or private?
 	{
+
 		public:
 		typedef	T			value_type;
 		typedef	T*			pointer;
 		typedef	T&			reference;
 		typedef	typename	ft::iterator<random_access_iterator_tag, T>::difference_type	difference_type;
 		typedef typename	ft::iterator<random_access_iterator_tag, T>::iterator_category	iterator_category;
-		private :
-		pointer _ptr;
+		protected:
+		pointer _M_current;
 		public:
 		//construct
-		random_access_iterator() : _ptr(0) {}
-		random_access_iterator(pointer ptr) : _ptr(ptr) {}
-		random_access_iterator(random_access_iterator const &src) : _ptr(src._ptr) {}
-		pointer	base() const	{return(_ptr);}
+		random_access_iterator() : _M_current(0) {}
+		random_access_iterator(pointer ptr) : _M_current(ptr) {}
+		random_access_iterator(random_access_iterator const &src) : _M_current(src._M_current) {}
+		~random_access_iterator() {}
+		pointer	base() const	{return(_M_current);}
 		//overload * -> and []
-		reference	operator*()		{return(*_ptr);}//read stl_iterator.h and stl_vector.h
-		pointer		operator->()	{return(_ptr);}
-		reference	operator[](difference_type dif const) const {return(*(_ptr + dif));}
+		reference	operator*()		{return(*_M_current);}//read stl_iterator.h and stl_vector.h
+		pointer		operator->()	{return(_M_current);}
+		reference	operator[](difference_type dif const) const {return(*(_M_current[dif]));}
+		//overload ++ -- += + -= -
+		random_access_iterator	&operator++()
+		{
+			++_M_current;
+			return *this;
+		}
+		random_access_iterator	operator++(int)
+		{	
+			return(random_access_iterator(_M_current++));
+		}
+		random_access_iterator	&operator--()
+		{
+			--_M_current;
+			return *this;
+		}
+		random_access_iterator	operator--(int)
+		{	
+			return(random_access_iterator(_M_current--));
+		}
+		random_access_iterator	operator+=(difference_type dif)
+		{
+			_M_current += dif;
+			return *this;
+		}
+		random_access_iterator	operator+(difference_type dif)
+		{
+			return (random_access_iterator(_M_current + dif));
+		}
+		random_access_iterator	operator-=(difference_type dif)
+		{
+			_M_current -= dif;
+			return *this;
+		}
+		random_access_iterator operator-(difference_type dif)
+		{
+			return (random_access_iterator(_M_current - dif));
+		}
 	};
 } // namespace ft
 
