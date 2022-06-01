@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/31 22:29:45 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/06/01 15:07:23 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ namespace ft
 	template<class Iterator>
 	struct iterator_traits
 	{
-		typedef typename		iterator::iterator_category	iterator_category;
-		typedef typename		iterator::value_type		value_type;
-		typedef typename		iterator::difference_type	difference_type;
-		typedef typename		iterator::pointer			pointer;
-		typedef	typename		iterator::reference			reference;
+		typedef typename		Iterator::iterator_category	iterator_category;
+		typedef typename		Iterator::value_type		value_type;
+		typedef typename		Iterator::difference_type	difference_type;
+		typedef typename		Iterator::pointer			pointer;
+		typedef	typename		Iterator::reference			reference;
 	};
 	template <class _Tp>
 	struct	iterator_traits<_Tp*>
@@ -61,7 +61,7 @@ namespace ft
 		typedef	const _Tp&					reference;
 	};
 	template <class T>
-	class	random_access_iterator : public ft::iterator<random_access_iterator_tag, T>//public or private?
+	class	random_access_iterator : public ft::iterator<random_access_iterator_tag, T>
 	{
 
 		public:
@@ -82,7 +82,7 @@ namespace ft
 		//overload * -> and []
 		reference	operator*()		{return(*_M_current);}//read stl_iterator.h and stl_vector.h
 		pointer		operator->()	{return(_M_current);}
-		reference	operator[](difference_type dif const) const {return(*(_M_current[dif]));}
+		reference	operator[](difference_type const dif) const {return(*(_M_current[dif]));}
 		//overload ++ -- += + -= -
 		random_access_iterator	&operator++()
 		{
@@ -120,7 +120,45 @@ namespace ft
 		{
 			return (random_access_iterator(_M_current - dif));
 		}
+		random_access_iterator &operator=(random_access_iterator const &src)
+		{
+			if (&src != this)
+				_M_current = src._M_current;
+			return *this;
+		}
 	};
+	//comparisons == != > >= < <=
+	template<class _IteratorL, class _IteratorR>
+	bool operator==(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() == rhs.base());
+	}
+	template<class _IteratorL, class _IteratorR>
+	bool operator!=(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() != rhs.base());
+	}
+	template<class _IteratorL, class _IteratorR>
+	bool operator>(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() > rhs.base());
+	}
+	template<class _IteratorL, class _IteratorR>
+	bool operator>=(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() >= rhs.base());
+	}
+	template<class _IteratorL, class _IteratorR>
+	bool operator<(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() < rhs.base());
+	}
+	template<class _IteratorL, class _IteratorR>
+	bool operator<=(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() <= rhs.base());
+	}
+
 } // namespace ft
 
 #endif

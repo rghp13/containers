@@ -6,14 +6,14 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/05/30 15:52:38 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/06/01 15:07:48 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1//CREATE A REAL STL EXAMPLE
+#if 0//CREATE A REAL STL EXAMPLE
 	namespace ft = std;
 	#include <map>
 	#include <stack>
@@ -23,11 +23,6 @@
 	#include "includes/stack.hpp"
 	#include "includes/vector.hpp"
 #endif
-int main(void)
-{
-	ft::vector<int> hi;
-}
-
 // #include <stdlib.h>
 
 // #define MAX_RAM 4294967296
@@ -39,8 +34,8 @@ int main(void)
 // };
 int main()
 {
-	ft::map<int, char *> qwe;
-	ft::map<int, char*>::iterator ptr;
+	ft::vector<int> qwe;
+	ft::vector<int>::iterator ptr;
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))
