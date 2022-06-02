@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/06/01 22:19:03 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/06/02 21:47:51 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,40 @@ namespace ft
 		explicit vector (const allocator_type &alloc = allocator_type()): _ptr(0), _size(0), _capacity(0), _alloc(alloc) {}
 		explicit vector (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type()) : _ptr(0), _size(0), _capacity(0), _alloc(alloc)
 		{
-			//add function to fill values in here
+			//add function to fill n amount of val in here
 		}
 		template <class Iterator>
 		vector(Iterator first, Iterator last, const allocator_type &alloc = allocator_type()): _ptr(0), _size(0), _capacity(0), _alloc(alloc)
-
+		{
+			//add function to fill range of values here
+		}
+		vector (const vector& x): _ptr(0), _size(0), _capacity(0), _alloc(x._alloc)
+		{
+			//add function to copy data from other vector to this one
+		}
+		~vector()
+		{
+			//add function to destroy elements properly
+			_alloc.deallocate(_ptr, _capacity);
+		}
+		vector &operator=(vector const &x)
+		{
+			if (*this == x)
+				return (*this);
+			//clear current data
+			//move data over here
+			//update all vars
+			return (*this);
+		}
+		iterator	begin(void)
+		{
+			return (iterator(_ptr));
+		}
+		const_iterator	begin(void)const
+		{
+			return (const_iterator(_ptr));
+		}
+		
 	};
 }//namespace ft
 #endif
