@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/06/02 21:47:51 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/02 23:27:25 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 # define VECTOR_HPP
 #include <memory>//allocator
 #include "iterator.hpp"
+#include "iterator_traits.hpp"
+#include "reverse_iterator.hpp"
 //must implement
 //Vector
 //Map
-//Stack
 namespace ft
 {
 	template <typename T, typename Alloc = std::allocator<T> >
@@ -37,8 +38,8 @@ namespace ft
 
 		typedef typename ft::random_access_iterator<value_type>			iterator;
 		typedef typename ft::random_access_iterator<const value_type>	const_iterator;
-		//typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
-		//typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;//still need to implement
+		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;//still need to implement
 		private:
 		pointer			_ptr;
 		size_type		_size;
@@ -82,7 +83,22 @@ namespace ft
 		{
 			return (const_iterator(_ptr));
 		}
-		
+		iterator	end(void)
+		{
+			return (iterator(_ptr + _size))//you are working on end and getting an iterator to point there
+		}
+		const_iterator	end(void) const
+		{
+			return (const_iterator(_ptr + _size));
+		}
+		reverse_iterator rbegin(void)
+		{
+			;
+		}
+		reverse_iterator rend(void)
+		{
+			;
+		}
 	};
 }//namespace ft
 #endif
