@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/03 18:52:45 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/04 22:37:14 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,22 @@ namespace ft
 			//update all vars
 			return (*this);
 		}
+		void assign(size_type count, const T &value)//fill
+		{
+			if (count > _capacity)
+				;//increase size (reserve)
+			for (size_type i = 0; i < _size; i++)//destroy data that might be there
+				_alloc.destroy(&_ptr[i]);
+			for (size_type i = 0; i < count; i++)//refill count amt of data
+				_alloc.construct(&_ptr[i],)
+			
+		}
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last)
+		{
+			;
+		}
+		//iterators
 		iterator	begin(void)
 		{
 			return (iterator(_ptr));
@@ -85,7 +101,7 @@ namespace ft
 		}
 		iterator	end(void)
 		{
-			return (iterator(_ptr + _size))//you are working on end and getting an iterator to point there
+			return (iterator(_ptr + _size));//you are working on end and getting an iterator to point there
 		}
 		const_iterator	end(void) const
 		{
@@ -93,11 +109,32 @@ namespace ft
 		}
 		reverse_iterator rbegin(void)
 		{
-			;
+			return (reverse_iterator(_ptr + _size));
+		}
+		const_reverse_iterator rbegin(void)const
+		{
+			return (const_reverse_iterator(_ptr + _size));
 		}
 		reverse_iterator rend(void)
 		{
-			;
+			return (reverse_iterator(_ptr));
+		}
+		const_reverse_iterator rend(void)const
+		{
+			return (reverse_iterator(_ptr + _size));
+		}
+		//Capacity
+		size_type size(void)const
+		{
+			return (_size);
+		}
+		size_type max_size(void)const
+		{
+			return _alloc.max_size();
+		}
+		void resize(size_type n, value_type val = value_type())
+		{
+
 		}
 	};
 }//namespace ft

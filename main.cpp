@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/06/02 21:05:21 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/04 20:55:35 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int main()
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
+	std::cout << qwe.max_size() << std::endl;
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))

@@ -9,7 +9,7 @@ CYAN = \033[36m
 
 SRC_NAME				=		main.cpp
 INCLUDES				=		./
-NAME					=		easyfind
+NAME					=		containers
 OBJ_NAME				=		$(SRC_NAME:.cpp=.o)
 CC						=		c++
 RM						=		rm -f
