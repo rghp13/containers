@@ -42,8 +42,8 @@ namespace ft
 		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;//still need to implement
 		private:
 		pointer			_ptr;
-		size_type		_size;
-		size_type		_capacity;
+		size_type		_size;//current amt of elements
+		size_type		_capacity;//how many elements you can add before you need to allocate more
 		allocator_type	_alloc;
 		public:
 		//construct default-fill-range-copy, destruct and operator =
@@ -51,11 +51,13 @@ namespace ft
 		explicit vector (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type()) : _ptr(0), _size(0), _capacity(0), _alloc(alloc)
 		{
 			//add function to fill n amount of val in here
+			this->assign(n, val);
 		}
 		template <class Iterator>
 		vector(Iterator first, Iterator last, const allocator_type &alloc = allocator_type()): _ptr(0), _size(0), _capacity(0), _alloc(alloc)
 		{
 			//add function to fill range of values here
+			this->assign(first, last);
 		}
 		vector (const vector& x): _ptr(0), _size(0), _capacity(0), _alloc(x._alloc)
 		{
@@ -90,6 +92,7 @@ namespace ft
 		{
 			;
 		}
+
 		//iterators
 		iterator	begin(void)
 		{
@@ -134,7 +137,38 @@ namespace ft
 		}
 		void resize(size_type n, value_type val = value_type())
 		{
-
+			if (n == _size)
+				return ;
+			else if (n < _size)
+				;//cut down to n size, destroy whatever goes over the limit
+			else if (n > size && n <= _capacity)
+				;//add until size
+			else if (n > size && n > _capacity)
+				;//allocate more space, move data then
+		}
+		void reserve(size_type n)
+		{
+			size_type new_cap = _capacity;
+			value_type *newptr;
+			if (_capacity >= n)//if smaller do nothing
+				return ;
+			else if (n > max_size())
+				throw std::length_error("newsize greater than maxsize");
+			if (new_cap == 0)
+				new_cap = 1;
+			while (new_cap < n)
+				new_cap *= 2;
+			//allocate then move memory if size != 0
+			newptr = _alloc.allocate(new_cap);
+			for (size_type i = 0; i < _size; i++)
+			{
+				_alloc.construct(&newptr[i], _ptr[i]);
+				_alloc.destroy(&_ptr[i]);
+			}
+			if (_ptr)
+				_alloc.deallocate(_ptr, _capacity);
+			_ptr = newptr;
+			_capacity = new_cap;
 		}
 	};
 }//namespace ft
