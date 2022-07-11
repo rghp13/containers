@@ -66,6 +66,11 @@ namespace ft
 		~vector()
 		{
 			//add function to destroy elements properly
+			if (_size > 0)
+			{
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_ptr[i]);
+			}
 			_alloc.deallocate(_ptr, _capacity);
 		}
 		vector &operator=(vector const &x)
@@ -80,19 +85,19 @@ namespace ft
 		void assign(size_type count, const T &value)//fill
 		{
 			if (count > _capacity)
-				;//increase size (reserve)
+				reserve(count);//increase size (reserve)
 			for (size_type i = 0; i < _size; i++)//destroy data that might be there
 				_alloc.destroy(&_ptr[i]);
 			for (size_type i = 0; i < count; i++)//refill count amt of data
 				_alloc.construct(&_ptr[i],)
-			
+			_size = count;
 		}
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last)
+		void assign (InputIterator first, InputIterator last)//need to integrate enable_if, learn SFINAE
 		{
-			;
+			;//do sfinae first
 		}
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//iterators
 		iterator	begin(void)
 		{
@@ -126,7 +131,15 @@ namespace ft
 		{
 			return (reverse_iterator(_ptr + _size));
 		}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Capacity
+		//size[x] maxsize[x] resize[x] capacity[] empty[x] reserve[x]
+		bool	empty(void)const
+		{
+			if (_size == 0)
+				return (true);
+			return (false);
+		}
 		size_type size(void)const
 		{
 			return (_size);
@@ -135,16 +148,26 @@ namespace ft
 		{
 			return _alloc.max_size();
 		}
+		size_type capacity(void)const
+		{
+			return (_capacity);
+		}
 		void resize(size_type n, value_type val = value_type())
 		{
-			if (n == _size)
+			if (n > _capacity)
+				reserve(n);
+			if (n > size)
+			{
+				for (size_type i = _size; i < n; i++)
+					_alloc.construct(&_ptr[i], val);
+				_size = n;
+			}
+			else if ( n < size)
+			{
+				for (size_type i = n; i < n; i++)
+					_alloc.destroy(&_ptr[i]);n == _size)
 				return ;
-			else if (n < _size)
-				;//cut down to n size, destroy whatever goes over the limit
-			else if (n > size && n <= _capacity)
-				;//add until size
-			else if (n > size && n > _capacity)
-				;//allocate more space, move data then
+			} 
 		}
 		void reserve(size_type n)
 		{
@@ -169,6 +192,20 @@ namespace ft
 				_alloc.deallocate(_ptr, _capacity);
 			_ptr = newptr;
 			_capacity = new_cap;
+		}
+		allocator_type	get_allocator(void) const
+		{
+			return (_alloc);
+		}
+		//clear[] insert[] erase[] push_back[] pop_back[] resize[] swap[]
+		void	clear(void)
+		{
+			if (_size > 0)
+			{
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(&_ptr[i]);
+				_size = 0;
+			}
 		}
 	};
 }//namespace ft
