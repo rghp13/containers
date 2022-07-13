@@ -97,6 +97,10 @@ namespace ft
 		{
 			;//do sfinae first
 		}
+		allocator_type	get_allocator(void) const
+		{
+			return (_alloc);
+		}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//iterators
 		iterator	begin(void)
@@ -133,13 +137,7 @@ namespace ft
 		}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Capacity
-		//size[x] maxsize[x] resize[x] capacity[] empty[x] reserve[x]
-		bool	empty(void)const
-		{
-			if (_size == 0)
-				return (true);
-			return (false);
-		}
+		//size[x] maxsize[x] resize[x] capacity[x] empty[x] reserve[x] 
 		size_type size(void)const
 		{
 			return (_size);
@@ -147,10 +145,6 @@ namespace ft
 		size_type max_size(void)const
 		{
 			return _alloc.max_size();
-		}
-		size_type capacity(void)const
-		{
-			return (_capacity);
 		}
 		void resize(size_type n, value_type val = value_type())
 		{
@@ -168,6 +162,16 @@ namespace ft
 					_alloc.destroy(&_ptr[i]);n == _size)
 				return ;
 			} 
+		}
+		size_type capacity(void)const
+		{
+			return (_capacity);
+		}
+		bool	empty(void)const
+		{
+			if (_size == 0)
+				return (true);
+			return (false);
 		}
 		void reserve(size_type n)
 		{
@@ -193,11 +197,7 @@ namespace ft
 			_ptr = newptr;
 			_capacity = new_cap;
 		}
-		allocator_type	get_allocator(void) const
-		{
-			return (_alloc);
-		}
-		//clear[] insert[] erase[] push_back[] pop_back[] resize[] swap[]
+		//clear[x] insert[] erase[] push_back[] pop_back[] resize[] swap[]
 		void	clear(void)
 		{
 			if (_size > 0)
@@ -206,6 +206,21 @@ namespace ft
 					_alloc.destroy(&_ptr[i]);
 				_size = 0;
 			}
+		}
+		//insert before element at position pos, increase size by number of element added
+		//ONLY reallocate if capacity is increased
+		iterator insert(iterator pos, const value_type &val)//single element
+		{
+			;
+		}
+		void insert(iterator pos, size_type n, const value_type &val)//fill
+		{
+			;
+		}
+		template <class InputIterator>
+		void insert(iterator pos, InputIterator first, InputIterator last)//range
+		{
+			;
 		}
 	};
 }//namespace ft
