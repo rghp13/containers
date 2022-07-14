@@ -212,10 +212,10 @@ namespace ft
 		//ONLY reallocate if capacity is increased
 		iterator insert(iterator pos, const value_type &val)//single element
 		{
-			size_type i = &*pos - &*begin();
+			size_type i = &*pos - &*begin();//should return distance from start
 			if (_size == _capacity)
 				reserve(_size + 1);
-			//shift(i, 1);
+			shiftr(i, 1);
 			_alloc.construction(&_ptr[i], val);
 			_size += 1;
 		}
@@ -229,10 +229,21 @@ namespace ft
 			;
 		}*/
 		private:
-		/*void shift(size_type start, size_type n)//make sure that there is space to shift before calling function
+		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
 		{
 			if (_size == 0)
 				return ;
+			for (size_type i = _size - 1; i >= start; i--)
+			{
+				_alloc.construct(&_ptr[i + n], &_ptr[i]);
+				_alloc.destroy(&_ptr[i]);
+			}
+		}
+		/*void shiftl(size_type start, size_type n)//make sure that you've already destroyed what you're shifting into
+		{
+			if (_size == 0)
+				return;
+			for (size_type i = start; i < )
 		}*/
 	};
 }//namespace ft
