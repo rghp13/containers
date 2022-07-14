@@ -13,7 +13,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1//CREATE A REAL STL EXAMPLE
+#if 0//CREATE A REAL STL EXAMPLE
 	namespace ft = std;
 	#include <map>
 	#include <stack>
@@ -36,10 +36,9 @@ int main()
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
-	qwe.push_back(50);
-	qwe.push_back(420);
-	ft::vector<char> erp(qwe.begin(), qwe.end());
-	std::cout << erp[1] << std::endl;
+	//qwe.push_back(50);
+	//qwe.push_back(420);
+	//ft::vector<char> erp(qwe.begin(), qwe.end());
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))

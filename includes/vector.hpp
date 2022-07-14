@@ -89,14 +89,14 @@ namespace ft
 			for (size_type i = 0; i < _size; i++)//destroy data that might be there
 				_alloc.destroy(&_ptr[i]);
 			for (size_type i = 0; i < count; i++)//refill count amt of data
-				_alloc.construct(&_ptr[i],)
+				_alloc.construct(&_ptr[i], value);
 			_size = count;
 		}
-		template <class InputIterator>
+		/*template <class InputIterator>
 		void assign (InputIterator first, InputIterator last)//need to integrate enable_if, learn SFINAE
 		{
 			;//do sfinae first
-		}
+		}*/
 		allocator_type	get_allocator(void) const
 		{
 			return (_alloc);
@@ -150,16 +150,17 @@ namespace ft
 		{
 			if (n > _capacity)
 				reserve(n);
-			if (n > size)
+			if (n > _size)
 			{
 				for (size_type i = _size; i < n; i++)
 					_alloc.construct(&_ptr[i], val);
 				_size = n;
 			}
-			else if ( n < size)
+			else if ( n < _size)
 			{
 				for (size_type i = n; i < n; i++)
-					_alloc.destroy(&_ptr[i]);n == _size)
+					_alloc.destroy(&_ptr[i]);
+				_size = n;
 				return ;
 			} 
 		}
@@ -211,9 +212,14 @@ namespace ft
 		//ONLY reallocate if capacity is increased
 		iterator insert(iterator pos, const value_type &val)//single element
 		{
-			;
+			size_type i = &*pos - &*begin();
+			if (_size == _capacity)
+				reserve(_size + 1);
+			//shift(i, 1);
+			_alloc.construction(&_ptr[i], val);
+			_size += 1;
 		}
-		void insert(iterator pos, size_type n, const value_type &val)//fill
+		/*void insert(iterator pos, size_type n, const value_type &val)//fill
 		{
 			;
 		}
@@ -221,7 +227,13 @@ namespace ft
 		void insert(iterator pos, InputIterator first, InputIterator last)//range
 		{
 			;
-		}
+		}*/
+		private:
+		/*void shift(size_type start, size_type n)//make sure that there is space to shift before calling function
+		{
+			if (_size == 0)
+				return ;
+		}*/
 	};
 }//namespace ft
 #endif
