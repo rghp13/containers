@@ -198,7 +198,7 @@ namespace ft
 			_ptr = newptr;
 			_capacity = new_cap;
 		}
-		//clear[x] insert[] erase[] push_back[] pop_back[] resize[] swap[]
+		//clear[x] insert[2/3] erase[] push_back[] pop_back[] resize[] swap[]
 		void	clear(void)
 		{
 			if (_size > 0)
@@ -212,39 +212,52 @@ namespace ft
 		//ONLY reallocate if capacity is increased
 		iterator insert(iterator pos, const value_type &val)//single element
 		{
-			size_type i = &*pos - &*begin();//should return distance from start
+			size_type i = &*pos - &*begin();//should return distance from start and not break with reallocation
 			if (_size == _capacity)
 				reserve(_size + 1);
 			shiftr(i, 1);
 			_alloc.construction(&_ptr[i], val);
 			_size += 1;
 		}
-		/*void insert(iterator pos, size_type n, const value_type &val)//fill
+		void insert(iterator pos, size_type n, const value_type &val)//fill
 		{
-			;
+			size_type start = &*pos - &*begin();
+			if (_size + n > _capacity)
+				reserve(_size + n);
+			shiftr(start, n);
+			for (size_type i = start; i < start + n; i++)
+				_alloc.construction(&_ptr[i], val);
+			_size += n;
 		}
-		template <class InputIterator>
-		void insert(iterator pos, InputIterator first, InputIterator last)//range
+		/*template <class InputIterator> NEEDS TO CODE ENABLE IF FIRST
+		void insert(iterator pos, InputIterator first, InputIterator last, 
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)//range
 		{
-			;
+			size_type start = &*pos - &*begin();
+			size_type n = std::distance(first, last);
 		}*/
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
 		{
 			if (_size == 0)
 				return ;
-			for (size_type i = _size - 1; i >= start; i--)
+			for (size_type i = _size - 1; i >= start; i--)//starts from end of array
 			{
 				_alloc.construct(&_ptr[i + n], &_ptr[i]);
 				_alloc.destroy(&_ptr[i]);
 			}
 		}
-		/*void shiftl(size_type start, size_type n)//make sure that you've already destroyed what you're shifting into
+		//start is where the first piece of valid data to shift is
+		void shiftl(size_type start, size_type n)//make sure that you've already destroyed what you're shifting into
 		{
 			if (_size == 0)
 				return;
-			for (size_type i = start; i < )
-		}*/
+			for (size_type i = start; i < start + n; i++)
+			{
+				_alloc.construct(&_ptr[i - n], &_ptr[i])
+				_alloc.destroy(&_ptr[i]);
+			}
+		}
 	};
 }//namespace ft
 #endif
