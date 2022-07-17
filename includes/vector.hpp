@@ -236,6 +236,17 @@ namespace ft
 			size_type start = &*pos - &*begin();
 			size_type n = std::distance(first, last);
 		}*/
+		iterator erase(iterator pos)//removes a single item then shift left
+		{
+			size_type i = &*pos - &*begin();//no need to protect from erasing an empty vector
+			_alloc.destroy(&_ptr[i])
+			shiftl(i + 1, 1);
+			_size -= 1;
+		}
+		iterator erase(iterator first, iterator last)
+		{
+			;
+		}
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
 		{
