@@ -198,7 +198,7 @@ namespace ft
 			_ptr = newptr;
 			_capacity = new_cap;
 		}
-		//clear[x] insert[2/3] erase[] push_back[] pop_back[] resize[] swap[]
+		//clear[x] insert[2/3] erase[x] push_back[x] pop_back[x] swap[]
 		void	clear(void)
 		{
 			if (_size > 0)
@@ -254,6 +254,27 @@ namespace ft
 			if (l == _size)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
 				return;
 			shiftl(l + 1, n);//this might leave a blank space need to test this
+		}
+		void push_back(const value_type &val)
+		{
+			if (_size + 1 > _capacity)
+				reserve(_size + 1);
+			_alloc.construct(&_ptr[_size++], val);
+		}
+		void pop_back(void)
+		{
+			if (_size == 0)
+				return ;
+			_alloc.destroy(&_ptr[_size - 1]);
+		}
+		void swap(vector &x)
+		{
+			if (this == &x);
+				return;
+			std::swap(_ptr, x._ptr);
+			std::swap(_size, x._size);
+			std::swap(_capacity, x._capacity);
+			std::Swap(_alloc, x._alloc);
 		}
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
