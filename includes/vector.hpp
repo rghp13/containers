@@ -245,7 +245,15 @@ namespace ft
 		}
 		iterator erase(iterator first, iterator last)
 		{
-			;
+			size_type f = &*first - &*begin();
+			size_type l = &*last - &*begin();
+			size_type n = l - f;
+			for (size_type i = f; i < l; i++)
+				_alloc.destroy(&_ptr[i]);
+			_size -= n;
+			if (l == _size)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
+				return;
+			shiftl(l + 1, n);//this might leave a blank space need to test this
 		}
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
