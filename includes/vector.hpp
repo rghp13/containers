@@ -13,6 +13,7 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 #include <memory>//allocator
+#include <exception>
 #include "iterator.hpp"
 #include "iterator_traits.hpp"
 #include "reverse_iterator.hpp"
@@ -198,7 +199,7 @@ namespace ft
 			_ptr = newptr;
 			_capacity = new_cap;
 		}
-		//clear[x] insert[2/3] erase[x] push_back[x] pop_back[x] swap[]
+		//clear[x] insert[2/3] erase[x] push_back[x] pop_back[x] swap[x]
 		void	clear(void)
 		{
 			if (_size > 0)
@@ -239,7 +240,7 @@ namespace ft
 		iterator erase(iterator pos)//removes a single item then shift left
 		{
 			size_type i = &*pos - &*begin();//no need to protect from erasing an empty vector
-			_alloc.destroy(&_ptr[i])
+			_alloc.destroy(&_ptr[i]);
 			shiftl(i + 1, 1);
 			_size -= 1;
 		}
@@ -269,12 +270,49 @@ namespace ft
 		}
 		void swap(vector &x)
 		{
-			if (this == &x);
+			if (this == &x)
 				return;
 			std::swap(_ptr, x._ptr);
 			std::swap(_size, x._size);
 			std::swap(_capacity, x._capacity);
-			std::Swap(_alloc, x._alloc);
+			std::swap(_alloc, x._alloc);
+		}
+		//element access = operator[x], at[x], front[x], back[x]
+		reference operator[](size_type n)
+		{
+			return (_ptr[n]);
+		}
+		const_reference operator[](size_type n)const
+		{
+			return (_ptr[n]);
+		}
+		reference at(size_type n)
+		{
+			if (n >= _size)
+				throw std::out_of_range("no valid element at this position");
+			return (_ptr[n]);
+		}
+		const_reference at (size_type n)const
+		{
+			if (n >= _size)
+				throw std::out_of_range("no valid element at this position");
+			return (_ptr[n]);
+		}
+		reference front(void)
+		{
+			return (_ptr[0]);
+		}
+		const_reference front(void)const
+		{
+			return (_ptr[0]);
+		}
+		reference back(void)
+		{
+			return (_ptr[_size - 1]);
+		}
+		const_reference back(void)
+		{
+			return (_ptr[_size - 1]);
 		}
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
@@ -294,10 +332,26 @@ namespace ft
 				return;
 			for (size_type i = start; i < start + n; i++)
 			{
-				_alloc.construct(&_ptr[i - n], &_ptr[i])
+				_alloc.construct(&_ptr[i - n], &_ptr[i]);
 				_alloc.destroy(&_ptr[i]);
 			}
 		}
 	};
+	//non relational operator, ==[], !=[], <[], <=[], >[], >=[], swap[x]
+	template <class T, class Alloc>//you should only build == and < then use those for all others
+	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		;//learn about lexicographical compare to complete this
+	}
+	template <class T, class Alloc>
+	bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		;
+	}
+	template <class T, class Alloc>
+	void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
+	{
+		x.swap(y);
+	}
 }//namespace ft
 #endif
