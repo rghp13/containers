@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/20 14:28:21 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/21 15:24:36 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include "reverse_iterator.hpp"
 #include "lexicographical_compare.hpp"
 #include "equal.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 //must implement
 //Vector
 //Map
@@ -95,11 +97,11 @@ namespace ft
 				_alloc.construct(&_ptr[i], value);
 			_size = count;
 		}
-		/*template <class InputIterator>
-		void assign (InputIterator first, InputIterator last)//need to integrate enable_if, learn SFINAE
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 		{
 			;//do sfinae first
-		}*/
+		}
 		allocator_type	get_allocator(void) const
 		{
 			return (_alloc);
@@ -339,7 +341,7 @@ namespace ft
 			}
 		}
 	};
-	//non relational operator, ==[x], !=[], <[x], <=[], >[], >=[], swap[x]
+	//non relational operator, ==[x], !=[x], <[x], <=[x], >[x], >=[x], swap[x]
 	template <class T, class Alloc>//you should only build == and < then use those for all others
 	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
