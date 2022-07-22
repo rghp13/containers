@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/21 15:24:36 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/22 14:10:26 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ namespace ft
 			_size = count;
 		}
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 		{
 			;//do sfinae first
 		}
@@ -234,13 +234,20 @@ namespace ft
 				_alloc.construction(&_ptr[i], val);
 			_size += n;
 		}
-		/*template <class InputIterator> NEEDS TO CODE ENABLE IF FIRST
+		template <class InputIterator>//why is this using enable_if
 		void insert(iterator pos, InputIterator first, InputIterator last, 
-		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr)//range
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)//range
 		{
 			size_type start = &*pos - &*begin();
 			size_type n = std::distance(first, last);
-		}*/
+
+			if (_size + n > _capacity)
+				reserve(_size + n);
+			shiftr(start, n);
+			for (size_type i = start; i < start + n; i++, first++)
+				_alloc.construction(&_ptr[i], *first);
+			_size += n;
+		}
 		iterator erase(iterator pos)//removes a single item then shift left
 		{
 			size_type i = &*pos - &*begin();//no need to protect from erasing an empty vector
@@ -314,7 +321,7 @@ namespace ft
 		{
 			return (_ptr[_size - 1]);
 		}
-		const_reference back(void)
+		const_reference back(void) const
 		{
 			return (_ptr[_size - 1]);
 		}
