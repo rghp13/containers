@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/22 14:10:26 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/22 16:27:30 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,7 @@ namespace ft
 		~vector()
 		{
 			//add function to destroy elements properly
-			if (_size > 0)
-			{
-				for (size_type i = 0; i < _size; i++)
-					_alloc.destroy(&_ptr[i]);
-			}
+			clear();
 			_alloc.deallocate(_ptr, _capacity);
 		}
 		vector &operator=(vector const &x)
@@ -83,16 +79,18 @@ namespace ft
 			if (*this == x)
 				return (*this);
 			//clear current data
+			clear();
 			//move data over here
+			assign(x.begin, x.end());
 			//update all vars
+			_alloc = x._alloc;
 			return (*this);
 		}
 		void assign(size_type count, const T &value)//fill
 		{
+			clear();
 			if (count > _capacity)
 				reserve(count);//increase size (reserve)
-			for (size_type i = 0; i < _size; i++)//destroy data that might be there
-				_alloc.destroy(&_ptr[i]);
 			for (size_type i = 0; i < count; i++)//refill count amt of data
 				_alloc.construct(&_ptr[i], value);
 			_size = count;
@@ -100,7 +98,13 @@ namespace ft
 		template <class InputIterator>
 		void assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 		{
-			;//do sfinae first
+			clear();
+			size_type n = std::distance(first, last);//including the element pointed by first but not the element pointed by last.
+			if (n > _capacity)
+				reserve(n);
+			for (size_type i = 0; i < n; i++, first++)
+				_alloc.construct(&_ptr[i], *first);
+			_size = n;
 		}
 		allocator_type	get_allocator(void) const
 		{
@@ -221,7 +225,7 @@ namespace ft
 			if (_size == _capacity)
 				reserve(_size + 1);
 			shiftr(i, 1);
-			_alloc.construction(&_ptr[i], val);
+			_alloc.construct(&_ptr[i], val);
 			_size += 1;
 		}
 		void insert(iterator pos, size_type n, const value_type &val)//fill
@@ -231,7 +235,7 @@ namespace ft
 				reserve(_size + n);
 			shiftr(start, n);
 			for (size_type i = start; i < start + n; i++)
-				_alloc.construction(&_ptr[i], val);
+				_alloc.construct(&_ptr[i], val);
 			_size += n;
 		}
 		template <class InputIterator>//why is this using enable_if
@@ -245,7 +249,7 @@ namespace ft
 				reserve(_size + n);
 			shiftr(start, n);
 			for (size_type i = start; i < start + n; i++, first++)
-				_alloc.construction(&_ptr[i], *first);
+				_alloc.construct(&_ptr[i], *first);
 			_size += n;
 		}
 		iterator erase(iterator pos)//removes a single item then shift left

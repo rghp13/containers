@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 18:31:12 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/22 14:13:12 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/22 15:41:55 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ namespace ft
 	{
 		const static bool value = true;
 	};
-	template <>
+	/*template <>
 	struct is_integral<char16_t>//probably removing due to being C++11
 	{
 		const static bool value = true;
@@ -55,7 +55,7 @@ namespace ft
 	struct is_integral<char32_t>//probably removing due to being C++11
 	{
 		const static bool value = true;
-	};
+	};*/
 	template <>
 	struct is_integral<wchar_t>
 	{
