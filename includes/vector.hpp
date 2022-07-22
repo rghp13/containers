@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/22 16:27:30 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/22 17:44:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ namespace ft
 
 		typedef typename ft::random_access_iterator<value_type>			iterator;
 		typedef typename ft::random_access_iterator<const value_type>	const_iterator;
-		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;//still need to implement
-		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;//still need to implement
+		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		private:
 		pointer			_ptr;
 		size_type		_size;//current amt of elements
@@ -56,17 +56,17 @@ namespace ft
 		explicit vector (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type()) : _ptr(0), _size(0), _capacity(0), _alloc(alloc)
 		{
 			//add function to fill n amount of val in here
-			this->assign(n, val);
+			assign(n, val);
 		}
 		template <class Iterator>
 		vector(Iterator first, Iterator last, const allocator_type &alloc = allocator_type()): _ptr(0), _size(0), _capacity(0), _alloc(alloc)
 		{
 			//add function to fill range of values here
-			this->assign(first, last);
+			assign(first, last);
 		}
 		vector (const vector& x): _ptr(0), _size(0), _capacity(0), _alloc(x._alloc)
 		{
-			//add function to copy data from other vector to this one
+			*this = x;
 		}
 		~vector()
 		{
@@ -80,10 +80,10 @@ namespace ft
 				return (*this);
 			//clear current data
 			clear();
+			_alloc = x._alloc;
 			//move data over here
 			assign(x.begin, x.end());
 			//update all vars
-			_alloc = x._alloc;
 			return (*this);
 		}
 		void assign(size_type count, const T &value)//fill
@@ -96,7 +96,7 @@ namespace ft
 			_size = count;
 		}
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 		{
 			clear();
 			size_type n = std::distance(first, last);//including the element pointed by first but not the element pointed by last.
@@ -153,7 +153,7 @@ namespace ft
 		}
 		size_type max_size(void)const
 		{
-			return _alloc.max_size();
+			return (_alloc.max_size());
 		}
 		void resize(size_type n, value_type val = value_type())
 		{
@@ -167,7 +167,7 @@ namespace ft
 			}
 			else if ( n < _size)
 			{
-				for (size_type i = n; i < n; i++)
+				for (size_type i = n; i < _size; i++)
 					_alloc.destroy(&_ptr[i]);
 				_size = n;
 				return ;
@@ -207,7 +207,7 @@ namespace ft
 			_ptr = newptr;
 			_capacity = new_cap;
 		}
-		//clear[x] insert[2/3] erase[x] push_back[x] pop_back[x] swap[x]
+		//clear[x] insert[x] erase[x] push_back[x] pop_back[x] swap[x]
 		void	clear(void)
 		{
 			if (_size > 0)
@@ -279,8 +279,6 @@ namespace ft
 		}
 		void pop_back(void)
 		{
-			if (_size == 0)
-				return ;
 			_alloc.destroy(&_ptr[_size - 1]);
 		}
 		void swap(vector &x)
