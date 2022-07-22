@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/22 17:44:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/22 18:06:13 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
-		return ((lhs == rhs) || (lhs < rhs));
+		return (!(rhs < lhs));
 	}
 	template <class T, class Alloc>
 	bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
@@ -381,7 +381,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
-		return ((lhs == rhs) || (lhs > rhs));
+		return (!(lhs < rhs));
 	}
 	template <class T, class Alloc>
 	void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
