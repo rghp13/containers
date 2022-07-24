@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/23 13:38:23 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/07/23 15:17:51 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <memory>//allocator
 #include <exception>
 #include <functional>
+#include <utility>
 #include "pair.hpp"
 namespace ft
 {
