@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/03 18:52:34 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:31:47 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ namespace ft
 		random_access_iterator(pointer ptr) : _M_current(ptr) {}
 		random_access_iterator(random_access_iterator const &src) : _M_current(src._M_current) {}
 		~random_access_iterator() {}
-		pointer	base() const	{return(_M_current);}
 		//overload * -> and []
+		pointer		base() const	{return(_M_current);}
 		reference	operator*()		{return(*_M_current);}//read stl_iterator.h and stl_vector.h
 		pointer		operator->()	{return(_M_current);}
-		reference	operator[](difference_type const dif) const {return(*(_M_current[dif]));}
+		reference	operator[](difference_type const dif) const {return(*(_M_current[dif]));}//random
 		//overload ++ -- += + -= -
 		random_access_iterator	&operator++()
 		{
@@ -57,21 +57,21 @@ namespace ft
 		{	
 			return(random_access_iterator(_M_current--));
 		}
-		random_access_iterator	operator+=(difference_type dif)
+		random_access_iterator	operator+=(difference_type dif)//random
 		{
 			_M_current += dif;
 			return *this;
 		}
-		random_access_iterator	operator+(difference_type dif)
+		random_access_iterator	operator+(difference_type dif)//random
 		{
 			return (random_access_iterator(_M_current + dif));
 		}
-		random_access_iterator	operator-=(difference_type dif)
+		random_access_iterator	operator-=(difference_type dif)//random
 		{
 			_M_current -= dif;
 			return *this;
 		}
-		random_access_iterator operator-(difference_type dif)
+		random_access_iterator operator-(difference_type dif)//random
 		{
 			return (random_access_iterator(_M_current - dif));
 		}
@@ -113,7 +113,6 @@ namespace ft
 	{
 		return (lhs.base() <= rhs.base());
 	}
-
 } // namespace ft
 
 #endif
