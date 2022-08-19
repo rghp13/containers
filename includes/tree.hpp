@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/07 23:32:22 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/10 16:02:58 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ namespace ft
 	{
 		public:
 		typedef T	value_type;
-		private:
 		node*		parent;
 		node*		left;
 		node*		right;
@@ -103,14 +102,44 @@ namespace ft
 		bidirectional_iterator operator++(int)
 		{
 			bidirectional_iterator tmp(ptr);
-			*this++;
+			operator++();
 			return (tmp);
 		}
 		bidirectional_iterator &operator--()
 		{
-			;
+			if (ptr->left)
+			{
+				ptr = ptr->left;
+				while (ptr->right)
+					ptr = ptr->right;
+			}
+			else
+			{
+				while (ptr->parent && ptr->parent->left == ptr)
+					ptr = ptr->parent;
+				if (ptr->parent)
+					ptr = ptr->parent;
+			}
+			return (*this);
 		}
+		bidirectional_iterator operator--(int)
+		{
+			bidirectional_iterator tmp(ptr);
+			operator--();
+			return (tmp);
+		}
+		//needs == !=
 	};
+	template<class _IteratorL, class _IteratorR>
+	bool operator==(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() == rhs.base());
+	} 
+	template<class _IteratorL, class _IteratorR>
+	bool operator!=(_IteratorL const &lhs, _IteratorR const &rhs)
+	{
+		return (lhs.base() != rhs.base());
+	}
 	//std::less == Function object for performing comparisons. Unless specialized, invokes operator< on type T
 	template <class T, class compare = std::less<T> >
 	class Tree
