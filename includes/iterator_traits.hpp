@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 23:01:04 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/03 18:52:39 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/31 14:14:53 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 
 namespace ft
 {
-	struct	input_iterator_tag {};
-	struct	output_iterator_tag {};
-	struct	forward_iterator_tag : public input_iterator_tag {};
-	struct	bidirectional_iterator_tag : public forward_iterator_tag {};
-	struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
+	//struct	input_iterator_tag {};
+	//struct	output_iterator_tag {};
+	//struct	forward_iterator_tag : public input_iterator_tag {};
+	//struct	bidirectional_iterator_tag : public forward_iterator_tag {};
+	//struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 	template<typename Category, class T, class Distance = ptrdiff_t,
 			 typename _Pointer = T*, class _Refererence = T&>
@@ -44,7 +44,7 @@ namespace ft
 	template <class _Tp>
 	struct	iterator_traits<_Tp*>
 	{
-		typedef random_access_iterator_tag	iterator_category;
+		typedef std::random_access_iterator_tag	iterator_category;
 		typedef	_Tp							value_type;
 		typedef	ptrdiff_t					difference_type;
 		typedef	_Tp*						pointer;
@@ -53,7 +53,7 @@ namespace ft
 	template <class _Tp>
 	struct	iterator_traits<const _Tp*>
 	{
-		typedef random_access_iterator_tag	iterator_category;
+		typedef std::random_access_iterator_tag	iterator_category;
 		typedef	_Tp							value_type;
 		typedef	ptrdiff_t					difference_type;
 		typedef	const _Tp*					pointer;

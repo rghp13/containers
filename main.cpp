@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/29 11:49:18 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:58:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,13 @@ int main()
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
-	//qwe.push_back(50);
-	//qwe.push_back(420);
-	//ft::vector<char> erp(qwe.begin(), qwe.end());
+	qwe.push_back(50);
+	qwe.push_back(420);
+	ptr = qwe.begin();
+	std::cout << *ptr << std::endl;
+	ptr++;
+	std::cout << *ptr << std::endl;
+	ft::vector<char> erp(qwe.begin(), qwe.end());
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))

@@ -6,25 +6,26 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 15:27:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/07 17:31:47 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:15:45 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 #include "iterator_traits.hpp"
+#include <iterator>
 namespace ft
 {
 	template <class T>
-	class	random_access_iterator : public ft::iterator<random_access_iterator_tag, T>
+	class	random_access_iterator : public ft::iterator<std::random_access_iterator_tag, T>
 	{
 
 		public:
 		typedef	T			value_type;
 		typedef	T*			pointer;
 		typedef	T&			reference;
-		typedef	typename	ft::iterator<random_access_iterator_tag, T>::difference_type	difference_type;
-		typedef typename	ft::iterator<random_access_iterator_tag, T>::iterator_category	iterator_category;
+		typedef	typename	ft::iterator<std::random_access_iterator_tag, T>::difference_type	difference_type;
+		typedef typename	ft::iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category;
 		protected:
 		pointer _M_current;
 		public:
@@ -66,14 +67,22 @@ namespace ft
 		{
 			return (random_access_iterator(_M_current + dif));
 		}
+		difference_type operator+(random_access_iterator const &src)
+		{
+			return (_M_current + src._M_current);
+		}
 		random_access_iterator	operator-=(difference_type dif)//random
 		{
 			_M_current -= dif;
 			return *this;
 		}
-		random_access_iterator operator-(difference_type dif)//random
+		random_access_iterator operator-(difference_type dif)//random Add another iterator
 		{
 			return (random_access_iterator(_M_current - dif));
+		}
+		difference_type operator-(random_access_iterator const &src)
+		{
+			return (_M_current - src._M_current);
 		}
 		random_access_iterator &operator=(random_access_iterator const &src)
 		{

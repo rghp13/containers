@@ -6,13 +6,14 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/10 16:02:58 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/08/31 16:47:49 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TREE_HPP
 # define TREE_HPP
 #include <memory>
+#include "iterator_traits.hpp"
 namespace ft
 {
 	template <class T>
@@ -53,7 +54,7 @@ namespace ft
 		}
 	};
 	template <class T>
-	class bidirectional_iterator : public ft::iterator<bidirectional_iterator_tag, T>
+	class bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, T>
 	{
 		public:
 		typedef T								node_type;
@@ -64,8 +65,8 @@ namespace ft
 		typedef data_type const					*const_data_pointer;
 		typedef data_type						&data_ref;
 		typedef data_type const					&const_data_ref;
-		typedef typename ft::iterator<bidirectional_iterator_tag, T>::difference_type	difference_type;
-		typedef typename ft::iterator<bidirectional_iterator_tag, T>::iterator_category	iterator_category;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::difference_type	difference_type;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		private:
 		node_pointer	ptr;
 		//construct
