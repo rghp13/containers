@@ -6,13 +6,13 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/31 16:58:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/09/04 15:54:06 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
-#include <deque>
+//#include <deque>
 #if 0//CREATE A REAL STL EXAMPLE
 	namespace ft = std;
 	#include <map>
@@ -36,12 +36,14 @@ int main()
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
-	qwe.push_back(50);
-	qwe.push_back(420);
+	for (int i = 0; i < 50; i++)
+		qwe.push_back(i);
 	ptr = qwe.begin();
-	std::cout << *ptr << std::endl;
-	ptr++;
-	std::cout << *ptr << std::endl;
+	while (ptr != qwe.end())
+	{
+		std::cout << *ptr << std::endl;
+		ptr++;
+	}
 	ft::vector<char> erp(qwe.begin(), qwe.end());
 }
 
