@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/17 03:10:14 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/18 00:04:27 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ namespace ft
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::size_type			size_type;
 		typedef typename allocator_type::difference_type	difference_type;
-		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		//add iterators later
 		private:
 		pointer			_start;

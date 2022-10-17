@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/17 03:07:22 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/18 00:05:29 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 # define MAP_HPP
 #include <memory>//allocator
 #include <exception>
+#include <stdexcept>
 //#include <map>
 #include <functional>
 #include <utility>
 #include "pair.hpp"
+#include "make_pair.hpp"
 #include "tree.hpp"
 namespace ft
 {
@@ -138,7 +140,85 @@ namespace ft
 		}
 		mapped_type	&operator[] (const key_type &k)
 		{
-			iterator i 
+			//find node, if it exists return the value if it doesn't exist create one and return value
+		}
+		mapped_type	&at(const key_type &key)
+		{
+			//find node if it doesn't exist throw
+			//throw std::out_of_range("map::at");
+		}
+		const mapped_type	&at(const key_type &key)const
+		{
+			//same as previous function
+		}
+		ft::pair<iterator, bool>	insert(const value_type &value)
+		{
+			return (_tree.insert(value));
+		}
+		iterator	insert(iterator position, const value_type &val)
+		{
+			return (_tree.insert(position, val));
+		}
+		template <class InputIterator>
+		void		insert(InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				_tree.insert(*first);
+				first++;
+			}
+		}
+		void		erase(iterator position)
+		{
+			_tree.erase(position);
+		}
+		size_type	erase(const key_type &k)
+		{
+			return (_tree.erase(k));
+		}
+		void		erase(iterator first, iterator last)//the range does not include the last iterator
+		{
+			_tree.erase(first, last);
+		}
+		void	swap(map &x)
+		{
+			std::swap(_alloc, x._alloc);
+			std::swap(_key_comp, x._key_comp);
+			std::swap(_value_comp, x._value_comp);
+			_tree.swap(x._tree);
+		}
+		void	clear(void)
+		{
+			_tree.clear();
+		}
+		key_compare	key_comp(void)const
+		{
+			return (_key_comp);
+		}
+		value_compare	value_comp(void)const
+		{
+			return (_value_comp);
+		}
+		iterator		find(const key_type &k)
+		{
+			return (_tree.find(ft::make_pair(k, mapped_type())));//consider updating the tree find function
+		}
+		const_iterator	find(const key_type &k)const
+		{
+			return (_tree.find(ft::make_pair(k, mapped_type())));
+		}//count equal range lower bound upperbound
+		size_type		count(const key_type &k)const
+		{
+			const_iterator it = find(k);
+			return ((it != end()))
+		}
+		iterator		lower_bound(const key_type &k)
+		{
+			return (_tree.lower_bound(k));
+		}
+		const_iterator	lower_bound(const key_type &k)const
+		{
+			return (_tree.lower_bound(k));
 		}
 	};
 } // namespace ft
