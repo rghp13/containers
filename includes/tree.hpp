@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/31 16:47:49 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/17 00:42:10 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ namespace ft
 	}
 	//std::less == Function object for performing comparisons. Unless specialized, invokes operator< on type T
 	template <class T, class compare = std::less<T> >
-	class Tree
+	class tree
 	{
 		public:
 		typedef T											value_type;
@@ -165,8 +165,8 @@ namespace ft
 		allocator_type	_alloc;
 		key_comp		_comp;
 		public:
-		Tree(const allocator_type &alloc = allocator_type(), const key_comp &comp = key_comp()): _alloc(alloc), _comp(comp), _start(0), _end(0), _size(0) {}
-		~Tree()
+		tree(const allocator_type &alloc = allocator_type(), const key_comp &comp = key_comp()): _alloc(alloc), _comp(comp), _start(0), _end(0), _size(0) {}
+		~tree()
 		{
 			//write function to delete all nodes
 		}
