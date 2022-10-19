@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/18 00:05:29 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/19 01:25:21 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,16 +209,36 @@ namespace ft
 		}//count equal range lower bound upperbound
 		size_type		count(const key_type &k)const
 		{
-			const_iterator it = find(k);
-			return ((it != end()))
+			const_iterator it = find(ft::make_pair(k, mapped_type());
+			return ((it != end()));
 		}
 		iterator		lower_bound(const key_type &k)
 		{
-			return (_tree.lower_bound(k));
+			return (_tree.lower_bound(ft::make_pair(k, mapped_type()));
 		}
 		const_iterator	lower_bound(const key_type &k)const
 		{
-			return (_tree.lower_bound(k));
+			return (_tree.lower_bound(ft::make_pair(k, mapped_type()));
+		}
+		iterator		upper_bound(const key_type &k)
+		{
+			return (_tree.upper_bound(ft::make_pair(k, mapped_type()));
+		}
+		const_iterator	upper_bound(const key_type &k)
+		{
+			return (_tree.upper_bound(ft::make_pair(k, mapped_type()));
+		}
+		pair<const_iterator,const_iterator>	equal_range(const key_type &k)const
+		{
+			return (_tree.equal_range(ft::make_pair(k, mapped_type())));
+		}
+		pair<iterator, iterator>			equal_range(const key_type)
+		{
+			return (_tree.equal_range(ft::make_pair(k, mapped_type())));
+		}
+		allocator_type	get_allocator(void)const
+		{
+			return (_alloc);
 		}
 	};
 } // namespace ft
