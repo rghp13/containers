@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/19 03:06:05 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/21 19:30:19 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ namespace ft
 	class node
 	{
 		public:
-		typedef T	value_type;
+		typedef T	value_type;//this is typically the pair object
 		node*		parent;
 		node*		left;
 		node*		right;
 		value_type	data;
 		unsigned int height;
 		public:
-		node(const value_type &src, node* parent, node* left = 0, node* right = 0, unsigned int height = 1) : value(src)parent(parent), left(left), right(right), height(height) {}
+		node(const value_type &src, node* parent = 0, node* left = 0, node* right = 0, unsigned int height = 0) : value(src)parent(parent), left(left), right(right), height(height) {}
 		node(const node &src)
 		{
 			*this = src;
@@ -45,8 +45,8 @@ namespace ft
 			}
 			return (*this)
 		}
-		swap(node &src)
-		{//should inbound pointers be udpated here?
+		void swap(node &src)//whats the end goal? complete swap does nothing, maybe you just want to swap the data?
+		{
 			if (*this == src)
 				return ;
 			node temp(*this);
@@ -60,30 +60,71 @@ namespace ft
 	class tree
 	{
 		public:
-		typedef T											value_type;
-		typedef node<T>										node_type;
-		typedef T::first_type								key_type;
-		typedef compare										key_comp;
-		typedef std::allocator<node_type>					allocator_type;
-		typedef typename allocator_type::reference			reference;
-		typedef typename allocator_type::const_reference	const_reference;
-		typedef typename allocator_type::pointer			pointer;
-		typedef typename allocator_type::const_pointer		const_pointer;
-		typedef typename allocator_type::size_type			size_type;
-		typedef typename allocator_type::difference_type	difference_type;
+		typedef T																				value_type;//the pair object
+		typedef node<T>																			node_type;
+		typedef typename T::first_type															key_type;//added typename
+		typedef typename T::second_type															mapped_type;//you might not need this, leave it to map to return the value
+		typedef compare																			key_comp;
+		typedef std::allocator<node_type>														allocator_type;
+		typedef typename allocator_type::reference												reference;
+		typedef typename allocator_type::const_reference										const_reference;
+		typedef typename allocator_type::pointer												pointer;
+		typedef typename allocator_type::const_pointer											const_pointer;
+		typedef typename allocator_type::size_type												size_type;
+		typedef typename allocator_type::difference_type										difference_type;
+		typedef typename ft::bidirectional_iterator<node_type>									iterator;
+		typedef typename ft::bidirectional_iterator<const node_type>							const_iterator;
+		typedef typename ft::reverse_bidirectional_iterator<iterator>							reverse_iterator;
+		typedef typename ft::reverse_bidirectional_iterator<const_iterator>						const_reverse_iterator;
 		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		//add iterators later
 		private:
 		pointer			_start;
 		pointer			_end;
+		pointer			_root;
 		size_type		_size;
 		allocator_type	_alloc;
-		key_comp		_comp;
+		key_comp		_comp;//this is the value_compare class from map
 		public:
-		tree(const allocator_type &alloc = allocator_type(), const key_comp &comp = key_comp()): _alloc(alloc), _comp(comp), _start(0), _end(0), _size(0) {}
+		tree(void): _alloc(), _comp(), _start(0), _end(0), _size(0), _root(0) {}
+		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), 
+		{
+			//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
+		}
 		~tree()
 		{
-			//write function to delete all nodes
+			clear();
+		}
+		tree	&operator=(const tree &x)
+		{
+			if (this != &x)
+			{
+				clear();
+				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
+			}
+		}
+		iterator	begin(void)
+		{
+			return (iterator(_begin));
+		}
+		const_iterator	begin(void)const
+		{
+			return(const_iterator(_begin));
+		}
+		iterator	end(void)
+		{
+			return (iterator(_end))
+		}
+		const_iterator	end(void)const
+		{
+			return (const_iterator(_end));
+		}
+		reverse_bidirectional_iterator rbegin(void)
+		{
+			pointer tmp = _root;
+			while (tmp->right)
+				tmp = tmp->right;
+			return (rever)//wait does this work? reverse iterator is supposed to deref the next object not the one it's on
 		}
 		//iterator functions to be taken from maps
 		bool empty(void) const
@@ -103,8 +144,8 @@ namespace ft
 			pointer ptr = _start;
 			if (ptr == 0)
 		}*/
-
-		pointer	create_node(value_type &val)
+		private:
+		pointer	create_node(value_type &val)//you still need to make the pointer connections
 		{
 			pointer ptr = _alloc.allocate(1);
 			_alloc.construct(ptr, node(val));

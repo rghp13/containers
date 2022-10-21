@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 15:48:28 by romain            #+#    #+#             */
-/*   Updated: 2022/07/20 18:33:52 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/21 00:18:16 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ namespace ft
 {
 	template <class InputIterator1, class InputIterator2>
 	bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
-	{
+	{//less than compare
 		while (first1 != last1)
 		{
 			if (first2 == last2 || *first2 < *first1)
