@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/21 19:08:21 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/23 01:50:58 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ namespace ft
 		public:
 		typedef Key														key_type;//
 		typedef T														mapped_type;//
-		typedef ft::pair<const key_type, mapped_type>					value_type;//
+		typedef ft::pair<const key_type, mapped_type>					value_type;//the pair
 		typedef Compare													key_compare;//
 		class value_compare : public std::binary_function<value_type, value_type, bool>//verify if this is legal or I should make my own
 		{
@@ -132,7 +132,7 @@ namespace ft
 		}
 		bool	empty(void)const
 		{
-			return (_tree.begin() == _tree.end());
+			return (_tree.empty());
 		}
 		size_type	size(void)const
 		{
@@ -144,7 +144,7 @@ namespace ft
 		}
 		mapped_type	&operator[] (const key_type &k)
 		{
-			;//find node, if it exists return the value if it doesn't exist create one and return value
+			insert();//find node, if it exists return the value if it doesn't exist create one and return value
 		}
 		mapped_type	&at(const key_type &key)
 		{

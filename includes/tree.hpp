@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/21 19:30:19 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/23 03:25:23 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ namespace ft
 		typedef typename T::first_type															key_type;//added typename
 		typedef typename T::second_type															mapped_type;//you might not need this, leave it to map to return the value
 		typedef compare																			key_comp;
-		typedef std::allocator<node_type>														allocator_type;
-		typedef typename allocator_type::reference												reference;
+		typedef std::allocator<node_type>														allocator_type;//the allocator is tailored to the node
+		typedef typename allocator_type::reference												reference;//node referrences
 		typedef typename allocator_type::const_reference										const_reference;
-		typedef typename allocator_type::pointer												pointer;
+		typedef typename allocator_type::pointer												pointer;//points to nodes
 		typedef typename allocator_type::const_pointer											const_pointer;
 		typedef typename allocator_type::size_type												size_type;
 		typedef typename allocator_type::difference_type										difference_type;
@@ -103,13 +103,13 @@ namespace ft
 				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
 			}
 		}
-		iterator	begin(void)
+		iterator	begin(void)//REMEMBER TO REVIEW HOW ITERATOR MOVEMENT WORKS
 		{
-			return (iterator(_begin));
+			return (iterator(_start));
 		}
 		const_iterator	begin(void)const
 		{
-			return(const_iterator(_begin));
+			return(const_iterator(_start));
 		}
 		iterator	end(void)
 		{
@@ -119,12 +119,21 @@ namespace ft
 		{
 			return (const_iterator(_end));
 		}
-		reverse_bidirectional_iterator rbegin(void)
+		reverse_iterator rbegin(void)
 		{
-			pointer tmp = _root;
-			while (tmp->right)
-				tmp = tmp->right;
-			return (rever)//wait does this work? reverse iterator is supposed to deref the next object not the one it's on
+			return (reverse_iterator(end()));
+		}
+		const_reverse_iterator rbegin(void)const
+		{
+			return (const_reverse_iterator(end()));
+		}
+		reverse_iterator	rend(void)
+		{
+			return (reverse_iterator(begin()));
+		}
+		const_reverse_iterator	rend(void)const
+		{
+			return (const_reverse_iterator(begin()));
 		}
 		//iterator functions to be taken from maps
 		bool empty(void) const
@@ -139,12 +148,19 @@ namespace ft
 		{
 			return (_alloc.max_size());
 		}
-		/*find(key_type &key)const
+		//insert rules add new nodes, however if key already exists do not add or update, return iterator to found object
+		ft::pair<iterator, bool> insert(const value_type &val)
 		{
-			pointer ptr = _start;
-			if (ptr == 0)
-		}*/
+			return (_internal_insert(val));
+		}
 		private:
+		ft::pair<iterator, bool> _internal_insert(const value_type &val)
+		{
+			iterator base = find(val);
+			if (base != end())//value already exists|| What if root of tree is null? that's not a problem
+				return (ft::make_pair(base, false));
+			base.ptr = root;
+		}
 		pointer	create_node(value_type &val)//you still need to make the pointer connections
 		{
 			pointer ptr = _alloc.allocate(1);
