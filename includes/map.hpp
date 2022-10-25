@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/23 01:50:58 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/24 00:14:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace ft
 			typedef bool	result_type;
 			typedef value_type	first_argument_type;
 			typedef value_type	second_argument_type;
-			bool operator()(const_reference x, const_reference y)const//maybe map::const_reference?
+			bool operator()(const_reference x, const_reference y)const//the pair itself is needed not the node
 			{
 				return comp(x.first, y.first);
 			}

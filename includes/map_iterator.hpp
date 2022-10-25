@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:41:29 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/20 19:41:32 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/25 03:00:29 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,14 @@ namespace ft
 	class bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, T>
 	{
 		public:
-		typedef T								node_type;
-		typedef node_type*						node_pointer;
-		typedef node_type&						node_ref;
-		typedef typename node_type::value_type	data_type;
-		typedef data_type						*data_pointer;
-		typedef data_type const					*const_data_pointer;
-		typedef data_type						&data_ref;
-		typedef data_type const					&const_data_ref;
-		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::difference_type	difference_type;
-		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
+		typedef T											value_type;
+		typedef T&											reference;
+		typedef T*											pointer;
+		typedef std::bidirectional_iterator_tag				iterator_category;
+		typedef ptrdiff_t									difference_type;
+
+		typedef bidirectional_iterator<T>					self;
+		typedef typename node::node_pointer					node_pointer;
 		private:
 		node_pointer	ptr;
 		//construct
@@ -44,12 +42,13 @@ namespace ft
 				ptr = x.ptr;
 			return (*this);
 		}
-		node_pointer			base(void) const	{return (ptr);}
-		node_reference			operator*()			{return(*ptr);}
-		node_pointer			operator->()		{return(ptr);}
+		node_pointer			base(void) const	{return (ptr);}//Hey remember that dereferencing a iterator returns the pair and not the node
+		reference				operator*()			{return(ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
+		pointer					operator->()		{return(&(ptr->value));}
 		bidirectional_iterator	&operator++()
 		{
-			if (ptr->right)
+			tree_increment(ptr);
+			/*if (ptr->right)
 			{
 				ptr = ptr->right;
 				while (ptr->left)
@@ -61,7 +60,7 @@ namespace ft
 					ptr = ptr->parent;
 				if (ptr->parent)
 					ptr = ptr->parent;
-			}
+			}*/
 			return (*this);
 		}
 		bidirectional_iterator operator++(int)
@@ -72,7 +71,8 @@ namespace ft
 		}
 		bidirectional_iterator &operator--()
 		{
-			if (ptr->left)
+			tree_decrement(ptr);
+			/*if (ptr->left)
 			{
 				ptr = ptr->left;
 				while (ptr->right)
@@ -84,7 +84,7 @@ namespace ft
 					ptr = ptr->parent;
 				if (ptr->parent)
 					ptr = ptr->parent;
-			}
+			}*/
 			return (*this);
 		}
 		bidirectional_iterator operator--(int)

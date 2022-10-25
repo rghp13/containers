@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/23 03:25:23 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/24 23:53:45 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ namespace ft
 	class node
 	{
 		public:
-		typedef T	value_type;//this is typically the pair object
+		typedef T		value_type;//this is typically the pair object
+		typedef node*	node_pointer;
 		node*		parent;
 		node*		left;
 		node*		right;
@@ -90,6 +91,8 @@ namespace ft
 		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), 
 		{
 			//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
+			pointer ptr = src._root;
+			non_balancing_copy(ptr);
 		}
 		~tree()
 		{
@@ -101,6 +104,7 @@ namespace ft
 			{
 				clear();
 				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
+				non_balancing_copy(x._root);
 			}
 		}
 		iterator	begin(void)//REMEMBER TO REVIEW HOW ITERATOR MOVEMENT WORKS
@@ -153,13 +157,59 @@ namespace ft
 		{
 			return (_internal_insert(val));
 		}
-		private:
+		private://internal functions for managing the binary tree
+		void	_recursive_clear(pointer node)//pointer should not be null
+		{
+			if (node->left)
+				_recursive_clear(node->left);
+			if (node->right)
+				_recursive_clear(node->right);
+			delete_node(node);
+		}
 		ft::pair<iterator, bool> _internal_insert(const value_type &val)
 		{
 			iterator base = find(val);
-			if (base != end())//value already exists|| What if root of tree is null? that's not a problem
+			if (base != end())//value already exists|| What if root of tree is null?then base would == end and would fail if
 				return (ft::make_pair(base, false));
-			base.ptr = root;
+			if (_root == 0)
+			{
+				_root = create_node(val);
+				return (ft::make_pair(iterator(_root), true));
+			}
+
+		}
+		void non_balancing_copy(pointer oldroot)//should never be null and should already be empty
+		{
+			pointer newroot = create_node(oldroot->data);
+			_root = newroot;
+			newroot->height = oldroot->height;
+			if (newroot->left)
+				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);
+			if (newroot->right)
+				newroot->right = recursive_non_balancing_copy(oldroot->right, newroot);
+			update_begin();
+			update_end();
+		}
+		pointer	recursive_non_balancing_copy(pointer oldtree, pointer parent)//neither should be null
+		{
+			pointer newnode = create_node(oldtree->data);
+			newnode->parent = parent;
+			newnode->height = oldtree->height;
+			if (oldtree->left)
+				newnode->left = recursive_non_balancing_copy(oldtree->left, newnode);
+			if (oldtree->right)
+				newnode->right = recursive_non_balancing_copy(oldtree->right, newnode);
+			return (newnode);
+		}
+		void	update_begin(void)
+		{
+			pointer search = _root;
+			if (_root)
+			{
+				while (search->left)
+					search = search->left;
+			}
+			_start = search;
 		}
 		pointer	create_node(value_type &val)//you still need to make the pointer connections
 		{
