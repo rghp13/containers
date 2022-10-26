@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:41:29 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/25 03:00:29 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/25 17:06:43 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,16 @@ namespace ft
 		bidirectional_iterator	&operator++()
 		{
 			tree_increment(ptr);
-			/*if (ptr->right)
+			/*if (ptr->right != 0)
 			{
 				ptr = ptr->right;
-				while (ptr->left)
+				while (ptr->left != 0)
 					ptr = ptr->left;
 			}
 			else
 			{
+				pointer tmp = ptr->parent;
+				while (ptr == tmp->right)
 				while (ptr->parent && ptr->parent->right == ptr)
 					ptr = ptr->parent;
 				if (ptr->parent)

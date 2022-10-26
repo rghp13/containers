@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/24 23:53:45 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/26 02:29:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ namespace ft
 		node*		left;
 		node*		right;
 		value_type	data;
-		unsigned int height;
+		int height;
 		public:
-		node(const value_type &src, node* parent = 0, node* left = 0, node* right = 0, unsigned int height = 0) : value(src)parent(parent), left(left), right(right), height(height) {}
+		node(const value_type &src, node* parent = 0, node* left = 0, node* right = 0, int height = 1) : value(src)parent(parent), left(left), right(right), height(height) {}
 		node(const node &src)
 		{
 			*this = src;
@@ -73,10 +73,10 @@ namespace ft
 		typedef typename allocator_type::const_pointer											const_pointer;
 		typedef typename allocator_type::size_type												size_type;
 		typedef typename allocator_type::difference_type										difference_type;
-		typedef typename ft::bidirectional_iterator<node_type>									iterator;
-		typedef typename ft::bidirectional_iterator<const node_type>							const_iterator;
-		typedef typename ft::reverse_bidirectional_iterator<iterator>							reverse_iterator;
-		typedef typename ft::reverse_bidirectional_iterator<const_iterator>						const_reverse_iterator;
+		typedef ft::bidirectional_iterator<value_type>											iterator;
+		typedef ft::bidirectional_iterator<const value_type>									const_iterator;
+		typedef ft::reverse_bidirectional_iterator<iterator>									reverse_iterator;
+		typedef ft::reverse_bidirectional_iterator<const_iterator>								const_reverse_iterator;
 		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		//add iterators later
 		private:
@@ -169,14 +169,52 @@ namespace ft
 		ft::pair<iterator, bool> _internal_insert(const value_type &val)
 		{
 			iterator base = find(val);
-			if (base != end())//value already exists|| What if root of tree is null?then base would == end and would fail if
+			pointer search = _root;
+
+			if (base != end())//value already exists
 				return (ft::make_pair(base, false));
 			if (_root == 0)
 			{
 				_root = create_node(val);
 				return (ft::make_pair(iterator(_root), true));
 			}
-
+			while (true)
+			{
+				if (_comp(val.first, search->data.first))//if val is less than search go left
+				{
+					if (search->left)//left node exists
+					{
+						search = search->left;
+						continue;
+					}
+					else//left doesn't exist
+					{
+						if (search->left == 0 && search->right)
+						search->left = create_node(val);//create
+						search->left->parent = search;
+					}
+				}
+			}
+		}
+		bool	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
+		{
+			int lh, rh, balance;
+			if (node->left == 0)
+				lh = 0;
+			else
+				lh = node->left->height;
+			if (node->right == 0)
+				rh = 0;
+			else
+				rh = node->right->height;
+			node->height = (lh > rh) ? lh + 1 : rh + 1;//bigger number + 1 gets stored
+			balance = lh - rh;
+			if (balance < 0)
+				balance *= -1;
+			if (balance <= 1)
+				return (false);//if balance is less than or equal to 1 then do nothing
+			else
+				return (true);//test what sort of rebalancing
 		}
 		void non_balancing_copy(pointer oldroot)//should never be null and should already be empty
 		{
@@ -211,7 +249,7 @@ namespace ft
 			}
 			_start = search;
 		}
-		pointer	create_node(value_type &val)//you still need to make the pointer connections
+		pointer	create_node(const value_type &val)//you still need to make the pointer connections
 		{
 			pointer ptr = _alloc.allocate(1);
 			_alloc.construct(ptr, node(val));
