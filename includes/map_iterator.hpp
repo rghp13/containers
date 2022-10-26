@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:41:29 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/25 17:06:43 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/26 17:27:00 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,35 @@ namespace ft
 		typedef ptrdiff_t									difference_type;
 
 		typedef bidirectional_iterator<T>					self;
-		typedef typename node::node_pointer					node_pointer;
+		typedef typename ft::node::node_pointer				node_pointer;
+		typedef ft::tree<value_type>*						tree_pointer;
 		private:
 		node_pointer	ptr;
+		tree_pointer	tree;
 		//construct
-		bidirectional_iterator(): ptr(0) {}
-		bidirectional_iterator(node_pointer other): ptr(other) {}
-		bidirectional_iterator(bidirectional_iterator const &src): ptr(src.ptr) {}
+		bidirectional_iterator(): ptr(0), tree(0) {}
+		bidirectional_iterator(node_pointer src, tree_pointer srctree): ptr(src), tree(srctree) {}
+		bidirectional_iterator(bidirectional_iterator const &src): ptr(src.ptr), tree(src.tree) {}
 		~bidirectional_iterator() {}
 		bidirectional_iterator &operator=(bidirectional_iterator const &x)
 		{
 			if (this != &x)
+			{
 				ptr = x.ptr;
+				tree = x.tree;
+			}
 			return (*this);
 		}
-		node_pointer			base(void) const	{return (ptr);}//Hey remember that dereferencing a iterator returns the pair and not the node
+		pointer					base(void) const	{return (&(ptr->value));}//Hey remember that dereferencing a iterator returns the pair and not the node
 		reference				operator*()			{return(ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
 		pointer					operator->()		{return(&(ptr->value));}
 		bidirectional_iterator	&operator++()
 		{
-			tree_increment(ptr);
-			/*if (ptr->right != 0)
+			if (!ptr)
+			{
+				*this = ;//try to get pointer to begin, not the iterator
+			}
+			else if (ptr->right != 0)
 			{
 				ptr = ptr->right;
 				while (ptr->left != 0)
@@ -56,13 +64,11 @@ namespace ft
 			}
 			else
 			{
-				pointer tmp = ptr->parent;
-				while (ptr == tmp->right)
 				while (ptr->parent && ptr->parent->right == ptr)
 					ptr = ptr->parent;
 				if (ptr->parent)
 					ptr = ptr->parent;
-			}*/
+			}
 			return (*this);
 		}
 		bidirectional_iterator operator++(int)
