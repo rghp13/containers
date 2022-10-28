@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/26 02:29:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/26 23:48:33 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,8 +225,8 @@ namespace ft
 				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);
 			if (newroot->right)
 				newroot->right = recursive_non_balancing_copy(oldroot->right, newroot);
-			update_begin();
-			update_end();
+			//update_begin();
+			//update_end();
 		}
 		pointer	recursive_non_balancing_copy(pointer oldtree, pointer parent)//neither should be null
 		{

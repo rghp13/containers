@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 23:25:45 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/07/04 18:16:48 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/28 02:08:24 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ namespace ft
 		~reverse_iterator() {}
 		reverse_iterator &operator=(const reverse_iterator<_Iterator> &other)
 		{
-			current = other.current;
+			if (this != &other)
+				current = other.current;
+			return (*this);
 		}
 		//functions
 		iterator_type	base() const

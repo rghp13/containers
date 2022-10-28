@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/25 03:00:32 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/28 02:09:45 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	#include <vector>
 #else
 	//#include "includes/map.hpp"
-	#include "includes/stack.hpp"
+	//#include "includes/stack.hpp"
 	#include "includes/vector.hpp"
 #endif
 // #include <stdlib.h>
@@ -36,15 +36,25 @@ int main()
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
+	ft::vector<int>::const_iterator cptr;
+	ft::vector<int>::reverse_iterator rptr;
 	for (int i = 0; i < 50; i++)
 		qwe.push_back(i);
+	rptr = qwe.rbegin();
+	std::cout << *rptr << std::endl;
 	ptr = qwe.begin();
-	while (ptr != qwe.end())
+	cptr = ptr;
+	if (cptr == ptr)
+		std::cout << "HI WORLD\n";
+	cptr = qwe.begin();
+	cptr += 3;
+	while (*ptr < 5)
 	{
 		std::cout << *ptr << std::endl;
 		ptr++;
 	}
-	ft::vector<char> erp(qwe.begin(), qwe.end());
+	qwe.erase(ptr, qwe.end());
+	std::cout << *ptr << std::endl;
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))

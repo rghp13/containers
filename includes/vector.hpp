@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/31 14:04:42 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/28 02:06:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ namespace ft
 	class vector
 	{
 		public:
-		typedef T														value_type;
-		typedef Alloc													allocator_type;
+		typedef T														value_type;//
+		typedef Alloc													allocator_type;//
 
 		typedef typename allocator_type::reference						reference;
 		typedef typename allocator_type::const_reference				const_reference;
@@ -42,8 +42,137 @@ namespace ft
 		typedef typename allocator_type::size_type						size_type;
 		typedef typename allocator_type::difference_type				difference_type;
 
-		typedef typename ft::random_access_iterator<value_type>			iterator;
-		typedef typename ft::random_access_iterator<const value_type>	const_iterator;
+		template <class Tt, bool isconst = false>
+		class	random_access_iterator : public ft::iterator<std::random_access_iterator_tag, Tt>
+		{
+
+			public:
+			typedef	Tt			value_type;
+			typedef	Tt*			pointer;
+			typedef	Tt&			reference;
+			typedef	typename	ft::iterator<std::random_access_iterator_tag, Tt>::difference_type	difference_type;
+			typedef typename	ft::iterator<std::random_access_iterator_tag, Tt>::iterator_category	iterator_category;
+			protected:
+			pointer _M_current;
+			public:
+			//construct
+			random_access_iterator() : _M_current(0) {}
+			random_access_iterator(pointer ptr) : _M_current(ptr) {}
+			random_access_iterator(random_access_iterator const &src) : _M_current(src._M_current) {}
+			~random_access_iterator() {}
+			//overload * -> and []
+			//pointer		base() const	{return(_M_current);}//base is only for reverse iterators apparently
+			reference	operator*()		{return(*_M_current);}//read stl_iterator.h and stl_vector.h
+			pointer		operator->()	{return(_M_current);}
+			reference	operator[](difference_type const dif) const {return(*(_M_current[dif]));}//random
+			random_access_iterator &operator=(random_access_iterator const &src)
+			{
+				if (&src != this)
+					_M_current = src._M_current;
+				return (*this);
+			}
+			//
+			operator random_access_iterator<const Tt, true>() const//conversion from non-const to const
+			{
+				return (random_access_iterator<const Tt, true>(_M_current));
+			}
+			//overload ++ -- += + -= -
+			random_access_iterator	&operator++()
+			{
+				++_M_current;
+				return (*this);
+			}
+			random_access_iterator	operator++(int)
+			{	
+				return(random_access_iterator(_M_current++));
+			}
+			random_access_iterator	&operator--()
+			{
+				--_M_current;
+				return (*this);
+			}
+			random_access_iterator	operator--(int)
+			{	
+				return(random_access_iterator(_M_current--));
+			}
+			random_access_iterator	operator+=(difference_type dif)//random
+			{
+				_M_current += dif;
+				return (*this);
+			}
+			random_access_iterator	operator+(difference_type dif)const//random
+			{
+				return (random_access_iterator(_M_current + dif));
+			}
+			random_access_iterator	operator-=(difference_type dif)//random
+			{
+				_M_current -= dif;
+				return (*this);
+			}
+			random_access_iterator operator-(difference_type dif)const//random Add another iterator
+			{
+				return (random_access_iterator(_M_current - dif));
+			}
+			difference_type operator-(random_access_iterator<Tt, false> const &src)const
+			{
+				return (_M_current - src._M_current);
+			}
+			difference_type operator-(random_access_iterator<Tt, true> const &src)const
+			{
+				return (_M_current - src._M_current);
+			}
+			//comparisons == != > >= < <=
+			bool operator==(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current == &(*src));
+			}
+			bool operator!=(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current != &(*src));
+			}
+			bool operator<(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current < &(*src));
+			}
+			bool operator<=(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current <= &(*src));
+			}
+			bool operator>(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current > &(*src));
+			}
+			bool operator>=(random_access_iterator<Tt, false> src)const
+			{
+				return (_M_current >= &(*src));
+			}
+			bool operator==(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current == &(*src));
+			}
+			bool operator!=(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current != &(*src));
+			}
+			bool operator<(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current < &(*src));
+			}
+			bool operator<=(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current <= &(*src));
+			}
+			bool operator>(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current > &(*src));
+			}
+			bool operator>=(random_access_iterator<Tt, true> src)const
+			{
+				return (_M_current >= &(*src));
+			}
+		};
+		typedef random_access_iterator<value_type>				iterator;
+		typedef random_access_iterator<const value_type, true>	const_iterator;
 		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		private:
@@ -259,6 +388,7 @@ namespace ft
 			_alloc.destroy(&_ptr[i]);
 			shiftl(i + 1, 1);
 			_size -= 1;
+			return (pos);
 		}
 		iterator erase(iterator first, iterator last)
 		{
@@ -269,8 +399,9 @@ namespace ft
 				_alloc.destroy(&_ptr[i]);
 			_size -= n;
 			if (l == _size)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
-				return;
+				return (first);
 			shiftl(l + 1, n);//this might leave a blank space need to test this
+			return (first);
 		}
 		void push_back(const value_type &val)
 		{
@@ -335,7 +466,7 @@ namespace ft
 				return ;
 			for (size_type i = _size - 1; i >= start; i--)//starts from end of array
 			{
-				_alloc.construct(&_ptr[i + n], &_ptr[i]);
+				_alloc.construct(&_ptr[i + n], _ptr[i]);
 				_alloc.destroy(&_ptr[i]);
 			}
 		}
@@ -346,8 +477,9 @@ namespace ft
 				return;
 			for (size_type i = start; i < start + n; i++)
 			{
-				_alloc.construct(&_ptr[i - n], &_ptr[i]);
+				_alloc.construct(&_ptr[i - n], _ptr[i]);
 				_alloc.destroy(&_ptr[i]);
+				
 			}
 		}
 	};

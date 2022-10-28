@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:41:29 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/26 17:27:00 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/27 17:37:16 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ namespace ft
 			}
 			return (*this);
 		}
-		pointer					base(void) const	{return (&(ptr->value));}//Hey remember that dereferencing a iterator returns the pair and not the node
+		//pointer					base(void) const	{return (&(ptr->value));}//Hey remember that dereferencing a iterator returns the pair and not the node
 		reference				operator*()			{return(ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
 		pointer					operator->()		{return(&(ptr->value));}
 		bidirectional_iterator	&operator++()
 		{
 			if (!ptr)
 			{
-				*this = ;//try to get pointer to begin, not the iterator
+				;//think about it
+				//what if you check if last node, if yes set flag to true which derefs key but not value
+				//set flag back to false if -- or current node is no longer last node
 			}
 			else if (ptr->right != 0)
 			{
