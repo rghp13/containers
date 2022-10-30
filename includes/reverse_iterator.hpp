@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 23:25:45 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/28 02:08:24 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/29 02:52:33 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,23 @@ namespace ft
 	class reverse_iterator
 	{
 		public:
-			typedef typename iterator_traits<_Iterator>::iterator_category	iterator_category;
-			typedef typename iterator_traits<_Iterator>::value_type			value_type;
-			typedef typename iterator_traits<_Iterator>::difference_type	difference_type;
-			typedef typename iterator_traits<_Iterator>::pointer			pointer;
-			typedef typename iterator_traits<_Iterator>::reference			reference;
+			typedef typename ft::iterator_traits<_Iterator>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<_Iterator>::value_type			value_type;
+			typedef typename ft::iterator_traits<_Iterator>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<_Iterator>::pointer			pointer;
+			typedef typename ft::iterator_traits<_Iterator>::reference			reference;
 			typedef _Iterator												iterator_type;
 		protected:
 			iterator_type current;
 		public:
 		//constructors
 		reverse_iterator(): current(iterator_type()) {}
-		explicit reverse_iterator(iterator_type it): current(it) {}
-		reverse_iterator(const reverse_iterator<_Iterator> &rev_it): current(rev_it.current) {}//unsure if <_Iterator> is 100% needed
+		explicit reverse_iterator(iterator_type it): current(it) {}//consider it = iterator_type()
+		template <class U>
+		reverse_iterator(const reverse_iterator<U> &other): current(other.base()) {}
 		~reverse_iterator() {}
-		reverse_iterator &operator=(const reverse_iterator<_Iterator> &other)
+		template <class U>
+		reverse_iterator &operator=(const reverse_iterator<U> &other)
 		{
 			if (this != &other)
 				current = other.current;
@@ -48,6 +50,14 @@ namespace ft
 		{
 			_Iterator __tmp = current;
 			return (*(--__tmp));
+		}
+		pointer operator->()const
+		{
+			return (&(operator*()));
+		}
+		reference operator[](difference_type n) const
+		{
+			return *(*this + n);
 		}
 		reverse_iterator operator+(difference_type n)const
 		{
@@ -88,14 +98,6 @@ namespace ft
 		{
 			current += n;
 			return (*this);
-		}
-		pointer operator->()const
-		{
-			return (&(operator*()));
-		}
-		reference operator[](difference_type n) const
-		{
-			return *(*this + n);
 		}
 	};
 	//relational operator == != < <= > >=
@@ -140,5 +142,5 @@ namespace ft
 	{
 		return (rev_it - n);
 	}
-};
+}//ft
 #endif

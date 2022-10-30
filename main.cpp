@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/28 02:09:45 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:02:58 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ int main()
 		std::cout << *ptr << std::endl;
 		ptr++;
 	}
-	qwe.erase(ptr, qwe.end());
-	std::cout << *ptr << std::endl;
+	std::cout << qwe[600] << std::endl;
 }
 
 // #define COUNT (MAX_RAM / (int)sizeof(Buffer))

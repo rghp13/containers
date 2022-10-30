@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 19:41:29 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/27 17:37:16 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/29 03:04:43 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,108 +14,11 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 #include "iterator_traits.hpp"
+#include "tree.hpp"
 
 namespace ft
-{
-	template <class T>
-	class bidirectional_iterator : public ft::iterator<std::bidirectional_iterator_tag, T>
-	{
-		public:
-		typedef T											value_type;
-		typedef T&											reference;
-		typedef T*											pointer;
-		typedef std::bidirectional_iterator_tag				iterator_category;
-		typedef ptrdiff_t									difference_type;
-
-		typedef bidirectional_iterator<T>					self;
-		typedef typename ft::node::node_pointer				node_pointer;
-		typedef ft::tree<value_type>*						tree_pointer;
-		private:
-		node_pointer	ptr;
-		tree_pointer	tree;
-		//construct
-		bidirectional_iterator(): ptr(0), tree(0) {}
-		bidirectional_iterator(node_pointer src, tree_pointer srctree): ptr(src), tree(srctree) {}
-		bidirectional_iterator(bidirectional_iterator const &src): ptr(src.ptr), tree(src.tree) {}
-		~bidirectional_iterator() {}
-		bidirectional_iterator &operator=(bidirectional_iterator const &x)
-		{
-			if (this != &x)
-			{
-				ptr = x.ptr;
-				tree = x.tree;
-			}
-			return (*this);
-		}
-		//pointer					base(void) const	{return (&(ptr->value));}//Hey remember that dereferencing a iterator returns the pair and not the node
-		reference				operator*()			{return(ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
-		pointer					operator->()		{return(&(ptr->value));}
-		bidirectional_iterator	&operator++()
-		{
-			if (!ptr)
-			{
-				;//think about it
-				//what if you check if last node, if yes set flag to true which derefs key but not value
-				//set flag back to false if -- or current node is no longer last node
-			}
-			else if (ptr->right != 0)
-			{
-				ptr = ptr->right;
-				while (ptr->left != 0)
-					ptr = ptr->left;
-			}
-			else
-			{
-				while (ptr->parent && ptr->parent->right == ptr)
-					ptr = ptr->parent;
-				if (ptr->parent)
-					ptr = ptr->parent;
-			}
-			return (*this);
-		}
-		bidirectional_iterator operator++(int)
-		{
-			bidirectional_iterator tmp(ptr);
-			operator++();
-			return (tmp);
-		}
-		bidirectional_iterator &operator--()
-		{
-			tree_decrement(ptr);
-			/*if (ptr->left)
-			{
-				ptr = ptr->left;
-				while (ptr->right)
-					ptr = ptr->right;
-			}
-			else
-			{
-				while (ptr->parent && ptr->parent->left == ptr)
-					ptr = ptr->parent;
-				if (ptr->parent)
-					ptr = ptr->parent;
-			}*/
-			return (*this);
-		}
-		bidirectional_iterator operator--(int)
-		{
-			bidirectional_iterator tmp(ptr);
-			operator--();
-			return (tmp);
-		}
-		//needs == !=
-	};
-	template<class _IteratorL, class _IteratorR>
-	bool operator==(_IteratorL const &lhs, _IteratorR const &rhs)
-	{
-		return (lhs.base() == rhs.base());
-	} 
-	template<class _IteratorL, class _IteratorR>
-	bool operator!=(_IteratorL const &lhs, _IteratorR const &rhs)
-	{
-		return (lhs.base() != rhs.base());
-	}
-	template <class _BiTerator>
+{//might remove all this
+	/*template <class _BiTerator>
 	class reverse_bidirectional_iterator
 	{
 		public:
@@ -174,6 +77,6 @@ namespace ft
 			++current;
 			return (tmp);
 		}
-	};
+	};*/
 }
 #endif
