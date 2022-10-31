@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/30 02:46:52 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/31 02:51:53 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 # define TREE_HPP
 #include <memory>
 #include "map_iterator.hpp"
+#include "map.hpp"
 #include "reverse_iterator.hpp"
 namespace ft
 {
 
 	//std::less == Function object for performing comparisons. Unless specialized, invokes operator< on type T
 	//template <class T>
-	template <class T, class compare = std::less<T> >
+	template <class T, class compare >
 	class tree
 	{
 		class node
@@ -93,93 +94,94 @@ namespace ft
 			typedef typename node::node_pointer					node_pointer;
 			typedef ft::tree<value_type>*						tree_pointer;
 			private:
-			node_pointer	ptr;
-			tree_pointer	tree;
+			node_pointer	_ptr;
+			node_pointer	_end;//parent == root, left == leftmost node, right equals rightmost node
 			//construct
-			bidirectional_iterator(): ptr(0), tree(0) {}
-			bidirectional_iterator(node_pointer src, tree_pointer srctree): ptr(src), tree(srctree) {}
-			bidirectional_iterator(bidirectional_iterator const &src): ptr(src.ptr), tree(src.tree) {}
+			bidirectional_iterator(): _ptr(0), _end(0) {}
+			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _end(end) {}
+			bidirectional_iterator(bidirectional_iterator const &src): _ptr(src._ptr), _end(src._end) {}
 			~bidirectional_iterator() {}
 			bidirectional_iterator &operator=(bidirectional_iterator const &x)
 			{
 				if (this != &x)
 				{
-					ptr = x.ptr;
-					tree = x.tree;
+					_ptr = x._ptr;
+					_end = x._end;
 				}
 				return (*this);
 			}
-			//pointer					base(void) const	{return (&(ptr->value));}//Hey remember that dereferencing a iterator returns the pair and not the node
-			reference				operator*()			{return(ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
-			pointer					operator->()		{return(&(ptr->value));}
+			reference				operator*()			{return(_ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
+			pointer					operator->()		{return(&(_ptr->value));}
 			bidirectional_iterator	&operator++()
 			{
-				if (ptr == _end)
-					;
-				else if (ptr->right != 0)
+				if (_ptr == _end)//if out of bounds do nothing
+					return (*this);
+				else if (_ptr == _end->right)//if last node
+					_ptr = _end;//move out of bounds
+				else if (_ptr->right != 0)
 				{
-					ptr = ptr->right;
-					while (ptr->left != 0)
-						ptr = ptr->left;
+					_ptr = _ptr->right;
+					while (_ptr->left != 0)
+						_ptr = _ptr->left;
 				}
 				else
 				{
-					while (ptr->parent && ptr->parent->right == ptr)
-						ptr = ptr->parent;
-					if (ptr->parent)
-						ptr = ptr->parent;
+					while (_ptr->parent && _ptr->parent->right == _ptr)
+						_ptr = _ptr->parent;
+					if (_ptr->parent)
+						_ptr = _ptr->parent;
 				}
 				return (*this);
 			}
-			//if right = null, 
-			//make prev variable
-			//x
-			//prev = current;
-			//current goes up one node
-			//while current isn't null and right isn't null and right == prev go back to x
-			//if right isn't null
-			//current = return of findnext(right)
 			bidirectional_iterator operator++(int)
 			{
-				bidirectional_iterator tmp(ptr);
+				bidirectional_iterator tmp(_ptr);
 				operator++();
 				return (tmp);
 			}
 			bidirectional_iterator &operator--()
 			{
-				if (ptr == _start)
-					ptr = _end;
-				else if (ptr->left)
+				if (_ptr == _end)//if out of bounds
+					_ptr = _end->right;//move to last element
+				else if (_ptr == _end->left)//if left-most element
+					_ptr = _end;//move out of bounds
+				else if (_ptr->left)
 				{
-					ptr = ptr->left;
-					while (ptr->right)
-						ptr = ptr->right;
+					_ptr = _ptr->left;
+					while (_ptr->right)
+						_ptr = _ptr->right;
 				}
 				else
 				{
-					while (ptr->parent && ptr->parent->left == ptr)
-						ptr = ptr->parent;
-					if (ptr->parent)
-						ptr = ptr->parent;
+					while (_ptr->parent && _ptr->parent->left == _ptr)
+						_ptr = _ptr->parent;
+					if (_ptr->parent)
+						_ptr = _ptr->parent;
 				}
 				return (*this);
 			}
 			bidirectional_iterator operator--(int)
 			{
-				bidirectional_iterator tmp(ptr);
+				bidirectional_iterator tmp(_ptr);
 				operator--();
 				return (tmp);
 			}
 			//needs == !=
-			template<class _IteratorL, class _IteratorR>
-			bool operator==(_IteratorL const &lhs, _IteratorR const &rhs)
+			bool operator==(bidirectional_iterator<Tt, false> const &src)const
 			{
-				return (lhs.ptr == rhs.ptr);
-			} 
-			template<class _IteratorL, class _IteratorR>
-			bool operator!=(_IteratorL const &lhs, _IteratorR const &rhs)
+				return (_ptr == src._ptr);
+			}
+			bool operator!=(bidirectional_iterator<Tt, false> const &src)const
 			{
-				return (lhs.ptr != rhs.ptr);
+				return (_ptr != src._ptr);
+			}
+			bool operator==(bidirectional_iterator<Tt, true> const &src)const
+			{
+				return (_ptr == src._ptr);
+			}
+			bool operator!=(bidirectional_iterator<Tt, true> const &src)const
+			{
+				return (_ptr != src._ptr);
 			}
 		};
 		typedef bidirectional_iterator<value_type>												iterator;
@@ -189,24 +191,33 @@ namespace ft
 		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		//add iterators later
 		private:
-		pointer			_start;
-		pointer			_last;
-		pointer			_end;
-		pointer			_root;
+		pointer			_start;//left most node
+		pointer			_last;//right most node
+		pointer			_end;//node that exists out of bounds
+		pointer			_root;//uppermost node
 		size_type		_size;
 		allocator_type	_alloc;
 		key_comp		_comp;//this is the value_compare class from map
 		public:
-		tree(void): _alloc(allocator_type), _comp(), _start(0), _end(0), _size(0), _root(0) {}
+		tree(const compare &comp): _alloc(allocator_type()), _comp(comp), _start(0), _last(0), _size(0), _root(0)
+		{
+			_end = _alloc.allocate(1);
+			_alloc.construct(_end, value_type());//avoids incrementing size
+		}
 		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), 
 		{
+			_end = _alloc.allocate(1);
+			_alloc.construct(_end, value_type());
 			//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
 			pointer ptr = src._root;
 			non_balancing_copy(ptr);
+			update_end_node();
 		}
 		~tree()
 		{
 			clear();
+			_alloc.destroy(_end);//removes _end's node which isn't included in the clear()
+			_alloc.deallocate(_end);
 		}
 		tree	&operator=(const tree &x)
 		{
@@ -214,10 +225,11 @@ namespace ft
 			{
 				clear();
 				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
-				non_balancing_copy(x._root);
+				non_balancing_copy(x._root);//remember this updates _root
+				update_end_node();
 			}
 		}
-		iterator	begin(void)//REMEMBER TO REVIEW HOW ITERATOR MOVEMENT WORKS
+		iterator	begin(void)//NOTE TO SELF Review behavior on empty tree
 		{
 			return (iterator(_start));
 		}
@@ -268,6 +280,27 @@ namespace ft
 			return (_internal_insert(val));
 		}
 		private://internal functions for managing the binary tree
+		void	update_end_node(void)//shouldn't be used if root is empty
+		{
+			pointer tmp;
+			if (_size == 0)
+			{
+				_end->parent
+			}
+			if (!_root)
+				return ;
+			while (_root->parent)
+				_root = _root->parent;
+			_end->parent = _root;
+			tmp = _root;
+			while (tmp->left)
+				tmp = tmp->left;
+			end->left = tmp;
+			tmp = _root;
+			while (tmp->right)
+				tmp = tmp->right;
+			end->right = tmp;
+		}
 		void	_recursive_clear(pointer node)//pointer should not be null
 		{
 			if (node->left)

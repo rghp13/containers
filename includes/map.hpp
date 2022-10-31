@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/24 00:14:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/10/31 02:17:10 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,9 @@ namespace ft
 		{
 			//friend class map<Key, T, Compare, Alloc>;
 			protected:
-			Compare	comp;
-			value_compare(Compare c): comp(c) {}
+			key_compare	comp;
+			value_compare(key_compare c): comp(c) {}
+			value_compare(const value_compare &src): comp(src.comp) {}//added for copy construction
 			public:
 			typedef bool	result_type;
 			typedef value_type	first_argument_type;
@@ -65,11 +66,12 @@ namespace ft
 		key_compare						_key_comp;
 		value_compare					_value_comp;//
 		public:
-		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()): tree()
+		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 		{
 			_key_comp = comp;
 			_alloc = alloc;
-			_value_comp = value_compare();
+			_value_comp = value_compare(_key_comp);
+			_tree(_value_comp,)
 		}
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
