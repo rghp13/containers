@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/31 02:51:53 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/01 03:49:30 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,15 @@ namespace ft
 			{
 				return (!left && !right)
 			}
-			void swap(node &src)//whats the end goal? complete swap does nothing, maybe you just want to swap the data?
+			int get_height(node_pointer const src)
 			{
-				if (*this == src)
+				if (!src)
+					return (0);
+				return (src->height);
+			}
+			void swap(node &src)//whats the end goal? complete swap does nothing, maybe you just want to swap the data?
+			{//only use is maybe if you want to move it to a new tree but the pointers still point to the old tree's data
+				if (this == &src)
 					return ;
 				node temp(*this);
 				*this = src;
@@ -95,7 +101,7 @@ namespace ft
 			typedef ft::tree<value_type>*						tree_pointer;
 			private:
 			node_pointer	_ptr;
-			node_pointer	_end;//parent == root, left == leftmost node, right equals rightmost node
+			node_pointer	_end;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
 			//construct
 			bidirectional_iterator(): _ptr(0), _end(0) {}
 			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _end(end) {}
@@ -135,7 +141,7 @@ namespace ft
 			}
 			bidirectional_iterator operator++(int)
 			{
-				bidirectional_iterator tmp(_ptr);
+				bidirectional_iterator tmp(_ptr, _end);
 				operator++();
 				return (tmp);
 			}
@@ -162,7 +168,7 @@ namespace ft
 			}
 			bidirectional_iterator operator--(int)
 			{
-				bidirectional_iterator tmp(_ptr);
+				bidirectional_iterator tmp(_ptr, _end);
 				operator--();
 				return (tmp);
 			}
@@ -193,7 +199,8 @@ namespace ft
 		private:
 		pointer			_start;//left most node
 		pointer			_last;//right most node
-		pointer			_end;//node that exists out of bounds
+		pointer			_sentinel;//node that exists out of bounds
+		pointer			_last_inserted;
 		pointer			_root;//uppermost node
 		size_type		_size;
 		allocator_type	_alloc;
@@ -201,23 +208,23 @@ namespace ft
 		public:
 		tree(const compare &comp): _alloc(allocator_type()), _comp(comp), _start(0), _last(0), _size(0), _root(0)
 		{
-			_end = _alloc.allocate(1);
-			_alloc.construct(_end, value_type());//avoids incrementing size
+			_sentinel = _alloc.allocate(1);
+			_alloc.construct(_sentinel, value_type());//avoids incrementing size
 		}
 		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), 
 		{
-			_end = _alloc.allocate(1);
-			_alloc.construct(_end, value_type());
+			_sentinel = _alloc.allocate(1);
+			_alloc.construct(_sentinel, value_type());
 			//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
 			pointer ptr = src._root;
 			non_balancing_copy(ptr);
-			update_end_node();
+			update_sentinel_node();
 		}
 		~tree()
 		{
 			clear();
-			_alloc.destroy(_end);//removes _end's node which isn't included in the clear()
-			_alloc.deallocate(_end);
+			_alloc.destroy(_sentinel);//removes _sentinel's node which isn't included in the clear()
+			_alloc.deallocate(_sentinel);
 		}
 		tree	&operator=(const tree &x)
 		{
@@ -226,24 +233,28 @@ namespace ft
 				clear();
 				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
 				non_balancing_copy(x._root);//remember this updates _root
-				update_end_node();
+				update_sentinel_node();
 			}
 		}
 		iterator	begin(void)//NOTE TO SELF Review behavior on empty tree
 		{
-			return (iterator(_start));
+			if (_root)
+				return (iterator(_start, _sentinel));
+			return (end());
 		}
 		const_iterator	begin(void)const
 		{
-			return(const_iterator(_start));
+			if (_root)
+				return(const_iterator(_start, _sentinel));
+			return (end());
 		}
 		iterator	end(void)
 		{
-			return (iterator(_end))
+			return (iterator(_sentinel ,_sentinel))
 		}
 		const_iterator	end(void)const
 		{
-			return (const_iterator(_end));
+			return (const_iterator(_sentinel, _sentinel));
 		}
 		reverse_iterator rbegin(void)
 		{
@@ -277,21 +288,71 @@ namespace ft
 		//insert rules add new nodes, however if key already exists do not add or update, return iterator to found object
 		ft::pair<iterator, bool> insert(const value_type &val)
 		{
-			return (_internal_insert(val));
+			iterator tmp = find(val);
+			if (tmp == end())//could not be found
+			{
+				_internal_insert(_root, val);
+				return (ft::make_pair(iterator(_last_inserted, _sentinel), true));
+			}
+			return (ft::make_pair(tmp, false));
 		}
 		private://internal functions for managing the binary tree
-		void	update_end_node(void)//shouldn't be used if root is empty
+		//Rotations
+		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
+		pointer	right_rotate(pointer y)//should not be null rotates left to the right
+		{
+			pointer x = y->left;
+			pointer t2 = x->right;
+			//rotate
+			x->right = y;
+			y->left = t2;
+			if (t2)
+				t2->parent = y;
+			x->parent = y->parent;
+			y->parent = x;
+			update_height(y);//update y first because it's now lower
+			update_height(x);
+			if (_root == y)
+			{
+				_root = x;
+			}
+			return (x);
+		}
+		//rotate subtree rooted with x
+		//LL case is a right rotate
+		//LR is a left subtree left rotate then main right rotate
+		//RR is a left rotate
+		pointer	left_rotate(pointer x)
+		{
+			pointer y = x->right;
+			pointer t2 = y->left;
+			//rotate
+			y->left = x;
+			x->right = t2;
+			if (t2)
+				t2->parent = x;
+			y->parent = x->parent;
+			x->parent = y;
+			update_height(x);
+			update_height(y);
+			if (_root == x)
+			{
+				_root = y;
+			}
+		}
+		void	update_sentinel_node(void)//shouldn't be used if root is empty
 		{
 			pointer tmp;
-			if (_size == 0)
+			if (_size == 0)//maybe if it was cleared
 			{
-				_end->parent
+				_sentinel->parent = 0;
+				_sentinel->left = 0;
+				_sentinel->right = 0;
+				return;
 			}
-			if (!_root)
-				return ;
 			while (_root->parent)
 				_root = _root->parent;
-			_end->parent = _root;
+			_sentinel->parent = _root;
 			tmp = _root;
 			while (tmp->left)
 				tmp = tmp->left;
@@ -309,37 +370,34 @@ namespace ft
 				_recursive_clear(node->right);
 			delete_node(node);
 		}
-		ft::pair<iterator, bool> _internal_insert(const value_type &val)
+		pointer	_internal_insert(pointer node, const value_type &val)//already checked for duplicates
 		{
-			iterator base = find(val);
-			pointer search = _root;
-
-			if (base != end())//value already exists
-				return (ft::make_pair(base, false));
-			if (_root == 0)
+			int balance;
+			if (node == 0)
+				return (_last_inserted = create_node(val));//lets me unwind recurse while keeping pointer of new node
+			if (_comp(val.first, node->data.first))//if val is less than search go left
+				node->left = _internal_insert(node->left, val);
+			else
+				node->right = _internal_insert(node->right, val);
+			balance = update_height(node);
+			//LL
+			if (balance > 1 && _comp(val.first,node->data.first))//if out of balance and val is smaller
+				return (right_rotate(node));
+			else if (balance > 1 && !(_comp(val.first, node->data.first)))//LR
 			{
-				_root = create_node(val);
-				return (ft::make_pair(iterator(_root), true));
+				node->left = left_rotate(node->left);
+				return (right_rotate(node));
 			}
-			while (true)
+			else if (balance < -1 && !(_comp(val.first, node->right->data.first)))//RR
+				return (left_rotate(node));
+			else if (balance < -1 && _comp(val.first, node->right->data.first))//RL
 			{
-				if (_comp(val.first, search->data.first))//if val is less than search go left
-				{
-					if (search->left)//left node exists
-					{
-						search = search->left;
-						continue;
-					}
-					else//left doesn't exist
-					{
-						if (search->left == 0 && search->right)
-						search->left = create_node(val);//create
-						search->left->parent = search;
-					}
-				}
+				node->right = right_rotate(node->right);
+				return (left_rotate(node));
 			}
+			return (node)//no rotate
 		}
-		bool	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
+		int	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
 		{
 			int lh, rh, balance;
 			if (node->left == 0)
@@ -352,12 +410,7 @@ namespace ft
 				rh = node->right->height;
 			node->height = (lh > rh) ? lh + 1 : rh + 1;//bigger number + 1 gets stored
 			balance = lh - rh;
-			if (balance < 0)
-				balance *= -1;
-			if (balance <= 1)
-				return (false);//if balance is less than or equal to 1 then do nothing
-			else
-				return (true);//test what sort of rebalancing
+			return (balance);
 		}
 		void non_balancing_copy(pointer oldroot)//should never be null and should already be empty
 		{
@@ -368,8 +421,7 @@ namespace ft
 				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);
 			if (newroot->right)
 				newroot->right = recursive_non_balancing_copy(oldroot->right, newroot);
-			//update_begin();
-			//update_end();
+			update_sentinel_node();
 		}
 		pointer	recursive_non_balancing_copy(pointer oldtree, pointer parent)//neither should be null
 		{

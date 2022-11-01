@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/31 02:17:10 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/01 01:45:51 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ namespace ft
 			typedef value_type	second_argument_type;
 			bool operator()(const_reference x, const_reference y)const//the pair itself is needed not the node
 			{
-				return comp(x.first, y.first);
+				return comp(x.first, y.first);//returns true if x is smaller
 			}
 		};
 		typedef Alloc													allocator_type;//
@@ -171,7 +171,7 @@ namespace ft
 			_tree.insert(first, last);
 		}
 		void		erase(iterator position)
-		{
+		 {//References and iterators to the erased elements are invalidated. Other references and iterators are not
 			_tree.erase(position);
 		}
 		size_type	erase(const key_type &k)
