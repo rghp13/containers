@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/02 04:27:51 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:42:46 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ namespace ft
 			_value_comp = x._value_comp;
 			_tree = x._tree;
 		}
-		~map(void){}
+		~map(){}
 		map	&operator=(const map &x)
 		{
 			if (this != &x)

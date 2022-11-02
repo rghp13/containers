@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/28 02:06:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:45:49 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ namespace ft
 			clear();
 			_alloc = x._alloc;
 			//move data over here
-			assign(x.begin, x.end());
+			assign(x.begin, x.end());//think about capacity
 			//update all vars
 			return (*this);
 		}

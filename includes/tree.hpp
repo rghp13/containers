@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/02 04:27:16 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:47:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,19 +158,19 @@ namespace ft
 			typedef ft::tree<value_type>*						tree_pointer;
 			protected:
 			node_pointer	_ptr;
-			node_pointer	_end;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
+			node_pointer	_sentinel;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
 			//construct
 			public:
-			bidirectional_iterator(): _ptr(0), _end(0) {}
-			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _end(end) {}
-			bidirectional_iterator(bidirectional_iterator const &src): _ptr(src._ptr), _end(src._end) {}
+			bidirectional_iterator(): _ptr(0), _sentinel(0) {}
+			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _sentinel(end) {}
+			bidirectional_iterator(bidirectional_iterator const &src): _ptr(src._ptr), _sentinel(src._sentinel) {}
 			~bidirectional_iterator() {}
 			bidirectional_iterator &operator=(bidirectional_iterator const &x)
 			{
 				if (this != &x)
 				{
 					_ptr = x._ptr;
-					_end = x._end;
+					_sentinel = x._sentinel;
 				}
 				return (*this);
 			}
@@ -178,10 +178,10 @@ namespace ft
 			pointer					operator->()		{return(&(_ptr->value));}
 			bidirectional_iterator	&operator++()
 			{
-				if (_ptr == _end)//if out of bounds do nothing
+				if (_ptr == _sentinel)//if out of bounds do nothing
 					return (*this);
-				else if (_ptr == _end->right)//if last node
-					_ptr = _end;//move out of bounds
+				else if (_ptr == _sentinel->right)//if last node
+					_ptr = _sentinel;//move out of bounds
 				else if (_ptr->right != 0)
 				{
 					_ptr = _ptr->right;
@@ -199,16 +199,16 @@ namespace ft
 			}
 			bidirectional_iterator operator++(int)
 			{
-				bidirectional_iterator tmp(_ptr, _end);
+				bidirectional_iterator tmp(_ptr, _sentinel);
 				operator++();
 				return (tmp);
 			}
 			bidirectional_iterator &operator--()
 			{
-				if (_ptr == _end)//if out of bounds
-					_ptr = _end->right;//move to last element
-				else if (_ptr == _end->left)//if left-most element
-					_ptr = _end;//move out of bounds
+				if (_ptr == _sentinel)//if out of bounds
+					_ptr = _sentinel->right;//move to last element
+				else if (_ptr == _sentinel->left)//if left-most element
+					_ptr = _sentinel;//move out of bounds
 				else if (_ptr->left)
 				{
 					_ptr = _ptr->left;
@@ -226,7 +226,7 @@ namespace ft
 			}
 			bidirectional_iterator operator--(int)
 			{
-				bidirectional_iterator tmp(_ptr, _end);
+				bidirectional_iterator tmp(_ptr, _sentinel);
 				operator--();
 				return (tmp);
 			}
@@ -369,7 +369,8 @@ namespace ft
 		private://internal functions for managing the binary tree
 		pointer	recursive_internal_delete(pointer node, const key_type &key)
 		{
-			pointer tmp;
+			pointer	tmp;
+			int		balance;
 			if (!node)
 				return (node);//in case you can't find it
 			if (_comp(key, node->data.first))//key is less go left
@@ -405,11 +406,17 @@ namespace ft
 					tmp = node->right;
 					while (tmp->left)
 						tmp = tmp->left;
-					node->swap(*tmp);//swap all pointers;
-					std::swap(node, tmp);//to clear confusion, node still needs to be deleted however it moved
-					
+					node->swap(*tmp);//tmp node now becomes upper node but keeps key/value
+					std::swap(node, tmp);//node pointer now points to the higher node
+					node->right = recursive_internal_delete(node->right, key);//should still find the correct key
+					if (node->right)//setting parent
+						node->right->parent = node;
 				}
 			}
+			//check for height and rebalances
+			balance = update_height(node);
+			//LL
+			if (balance > 1 && update_height(node->left))
 		}
 		//Rotations
 		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
@@ -486,7 +493,7 @@ namespace ft
 			delete_node(node);
 		}
 		pointer	_internal_insert(pointer node, const value_type &val)//already checked for duplicates
-		{//THINK does newnode have a parent
+		{// THINK does newnode have a parent
 			int balance;
 			if (node == 0)
 				return (_last_inserted = create_node(val));//lets me unwind recurse while keeping pointer of new node
@@ -539,7 +546,7 @@ namespace ft
 			_root = newroot;
 			newroot->height = oldroot->height;
 			if (newroot->left)
-				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);
+				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);//make sure that parents are correct
 			if (newroot->right)
 				newroot->right = recursive_non_balancing_copy(oldroot->right, newroot);
 			update_sentinel_node();

@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/31 15:26:26 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:42:31 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 // 	int idx;
 // 	char buff[BUFFER_SIZE];
 // };
-int main()
+int main(void)
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
