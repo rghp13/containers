@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/01 03:49:30 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 04:27:16 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "reverse_iterator.hpp"
 namespace ft
 {
-
+	//AVL pros and cons vs RB + great if frequent search and not many insertions
 	//std::less == Function object for performing comparisons. Unless specialized, invokes operator< on type T
 	//template <class T>
 	template <class T, class compare >
@@ -42,14 +42,20 @@ namespace ft
 				*this = src;
 			}
 			~node() {}
-			node &operator=(const node &src)//this isn't going to work by itself
+			node &operator=(const node &src)//this is taking all the pointers from src
 			{
 				if (this != &src)
 				{
 					parent = src.parent;
+					if (parent)
+					{
+						if (parent->left == &src)
+							parent->left = this;
+						else if (parent->right == &src)
+					}
 					left = src.left;
 					right = src.right;
-					data = src.data;
+					//data = src.data;don't transfer pair
 					height = src.height;
 				}
 				return (*this)
@@ -68,9 +74,60 @@ namespace ft
 			{//only use is maybe if you want to move it to a new tree but the pointers still point to the old tree's data
 				if (this == &src)
 					return ;
-				node temp(*this);
-				*this = src;
-				src = temp;
+				pointer tmpl = left;
+				pointer tmpr = right;//updating my left and right
+				pointer tmpp = parent;
+				if (src.left == this)//if im to the left
+					left = &src;//then it has to go to my left
+				else
+					left = src.left;
+				if (src.right == this)
+					right = &src;
+				else
+					right = src.right;
+				if (left)//updated left needs to set itself as parent to subnode
+					left->parent = this;
+				if (right)
+					right->parent = this;
+				//updating src's left and right
+				if (tmpl == &src)
+					src.left = this;
+				else
+					src.left = tmpl;
+				if (tmpr == &src)
+					src.right = this;
+				else
+					src.right = tmpr;
+				if (tmpl)
+					tmpl->parent = &src;
+				if (tmpr)
+					tmpr->parent = &src;
+				//updating my parent
+				if (src.parent == this)
+					parent = &src;
+				else
+					parent = src.parent;
+				if (parent)
+				{
+					if (parent->left == &src)
+						parent->left = this;
+					else if (parent->right == &src)
+						parent->right = this;
+				}
+				//updating their parent
+				src.parent = tmpp;
+				if (src.parent)
+				{
+					if (src.parent->left == this)
+						src.parent->left = &src;
+					else if (src.parent->right == this)
+						src.parent->right = &src;
+				}
+				std::swap(height, src.height);
+				//do I want to swap the key-val pair?
+				//A is being deleted and B is taking its spot
+				//B swaps all A's pointers and height
+				//swapping data wouldn't be helpful
 			}
 		};
 		public:
@@ -99,10 +156,11 @@ namespace ft
 			typedef bidirectional_iterator<T>					self;
 			typedef typename node::node_pointer					node_pointer;
 			typedef ft::tree<value_type>*						tree_pointer;
-			private:
+			protected:
 			node_pointer	_ptr;
 			node_pointer	_end;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
 			//construct
+			public:
 			bidirectional_iterator(): _ptr(0), _end(0) {}
 			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _end(end) {}
 			bidirectional_iterator(bidirectional_iterator const &src): _ptr(src._ptr), _end(src._end) {}
@@ -236,6 +294,9 @@ namespace ft
 				update_sentinel_node();
 			}
 		}
+		  //////////////////////////////////////////////////////////////////
+		 /////////////////////////ITERATORS////////////////////////////////
+		//////////////////////////////////////////////////////////////////
 		iterator	begin(void)//NOTE TO SELF Review behavior on empty tree
 		{
 			if (_root)
@@ -272,7 +333,9 @@ namespace ft
 		{
 			return (const_reverse_iterator(begin()));
 		}
-		//iterator functions to be taken from maps
+		  //////////////////////////////////////////////////////////////////
+		 /////////////////////////////Capacity/////////////////////////////
+		//////////////////////////////////////////////////////////////////
 		bool empty(void) const
 		{
 			return (_size == 0);
@@ -285,6 +348,9 @@ namespace ft
 		{
 			return (_alloc.max_size());
 		}
+		  //////////////////////////////////////////////////////////////////
+		 ////////////////////////////Modifiers/////////////////////////////
+		//////////////////////////////////////////////////////////////////
 		//insert rules add new nodes, however if key already exists do not add or update, return iterator to found object
 		ft::pair<iterator, bool> insert(const value_type &val)
 		{
@@ -296,7 +362,55 @@ namespace ft
 			}
 			return (ft::make_pair(tmp, false));
 		}
+		size_type	erase(key_type const &key)
+		{//unsure if i can access protected variable from nested class
+			
+		}
 		private://internal functions for managing the binary tree
+		pointer	recursive_internal_delete(pointer node, const key_type &key)
+		{
+			pointer tmp;
+			if (!node)
+				return (node);//in case you can't find it
+			if (_comp(key, node->data.first))//key is less go left
+			{
+				node->left = recursive_internal_delete(node->left, key);
+				if (node->left)//if this isn't replaced with a null set new parent
+					node->left->parent = node;
+			}
+			else if ((_comp(node->data.first, key)))//can't do !_comp because it would catch ==
+			{
+				node->right = recursive_internal_delete(node->right, key);
+				if (node->right)
+					node->right->parent = node;
+			}
+			else//this is the node to delete
+			{
+				if (node->left == 0 || node->right == 0)//if one or both child is empty
+				{
+					tmp = node->left ? node->left: node->right;//if left is valid store it otherwise go right
+					if (!tmp)//no child
+					{
+						delete_node(node);
+						return (0);
+					}
+					else//tmp is equal to the 1 child
+					{
+						delete_node(node);
+						return (tmp);//doesn't need heigh re-adjustment
+					}
+				}
+				else//2 children
+				{//geeks says to take smallest value on the right
+					tmp = node->right;
+					while (tmp->left)
+						tmp = tmp->left;
+					node->swap(*tmp);//swap all pointers;
+					std::swap(node, tmp);//to clear confusion, node still needs to be deleted however it moved
+					
+				}
+			}
+		}
 		//Rotations
 		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
 		pointer	right_rotate(pointer y)//should not be null rotates left to the right
@@ -336,11 +450,10 @@ namespace ft
 			update_height(x);
 			update_height(y);
 			if (_root == x)
-			{
 				_root = y;
-			}
+			return (y);
 		}
-		void	update_sentinel_node(void)//shouldn't be used if root is empty
+		void	update_sentinel_node(void)
 		{
 			pointer tmp;
 			if (_size == 0)//maybe if it was cleared
@@ -357,10 +470,12 @@ namespace ft
 			while (tmp->left)
 				tmp = tmp->left;
 			end->left = tmp;
+			_start = tmp;
 			tmp = _root;
 			while (tmp->right)
 				tmp = tmp->right;
 			end->right = tmp;
+			_last = tmp;
 		}
 		void	_recursive_clear(pointer node)//pointer should not be null
 		{
@@ -371,14 +486,20 @@ namespace ft
 			delete_node(node);
 		}
 		pointer	_internal_insert(pointer node, const value_type &val)//already checked for duplicates
-		{
+		{//THINK does newnode have a parent
 			int balance;
 			if (node == 0)
 				return (_last_inserted = create_node(val));//lets me unwind recurse while keeping pointer of new node
 			if (_comp(val.first, node->data.first))//if val is less than search go left
+			{
 				node->left = _internal_insert(node->left, val);
+				node->left->parent = node;//makes sure parent is set
+			}
 			else
+			{
 				node->right = _internal_insert(node->right, val);
+				node->right->parent = node;//make sure parent is set
+			}
 			balance = update_height(node);
 			//LL
 			if (balance > 1 && _comp(val.first,node->data.first))//if out of balance and val is smaller
@@ -395,10 +516,10 @@ namespace ft
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
 			}
-			return (node)//no rotate
+			return (node)//if no rotate return unchanged pointer
 		}
 		int	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
-		{
+		{//also returns balance
 			int lh, rh, balance;
 			if (node->left == 0)
 				lh = 0;

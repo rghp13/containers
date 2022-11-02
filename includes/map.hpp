@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/01 01:45:51 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/01 21:19:25 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,12 +163,14 @@ namespace ft
 		}
 		iterator	insert(iterator position, const value_type &val)
 		{
-			return (_tree.insert(position, val));
+			(void)position;
+			return (_tree.insert(val));//hint disregarded
 		}
 		template <class InputIterator>
 		void		insert(InputIterator first, InputIterator last)
 		{
-			_tree.insert(first, last);
+			while (first != last)
+				_tree.insert(first++);
 		}
 		void		erase(iterator position)
 		 {//References and iterators to the erased elements are invalidated. Other references and iterators are not
@@ -180,7 +182,8 @@ namespace ft
 		}
 		void		erase(iterator first, iterator last)//the range does not include the last iterator
 		{
-			_tree.erase(first, last);
+			while (first != last)
+				_tree.erase(first++);
 		}
 		void	swap(map &x)
 		{
