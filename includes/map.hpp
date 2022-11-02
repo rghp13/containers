@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/01 21:19:25 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/02 04:27:51 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,21 +164,21 @@ namespace ft
 		iterator	insert(iterator position, const value_type &val)
 		{
 			(void)position;
-			return (_tree.insert(val));//hint disregarded
+			return (_tree.insert(val).first);//hint disregarded
 		}
 		template <class InputIterator>
 		void		insert(InputIterator first, InputIterator last)
 		{
 			while (first != last)
-				_tree.insert(first++);
+				_tree.insert(*first++);
 		}
 		void		erase(iterator position)
 		 {//References and iterators to the erased elements are invalidated. Other references and iterators are not
-			_tree.erase(position);
+			_tree.erase(position->first);
 		}
 		size_type	erase(const key_type &k)
 		{
-			return (_tree.erase(k));
+			return (_tree.erase(k));//returns number of elements removed (can only be 1 at most)
 		}
 		void		erase(iterator first, iterator last)//the range does not include the last iterator
 		{
