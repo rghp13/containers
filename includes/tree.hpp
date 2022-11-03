@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/02 17:47:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/03 01:28:48 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ namespace ft
 			//construct
 			public:
 			bidirectional_iterator(): _ptr(0), _sentinel(0) {}
-			bidirectional_iterator(node_pointer src, node_pointer end): _ptr(src), _sentinel(end) {}
+			bidirectional_iterator(node_pointer src, node_pointer sentinel): _ptr(src), _sentinel(sentinel) {}
 			bidirectional_iterator(bidirectional_iterator const &src): _ptr(src._ptr), _sentinel(src._sentinel) {}
 			~bidirectional_iterator() {}
 			bidirectional_iterator &operator=(bidirectional_iterator const &x)
@@ -349,26 +349,41 @@ namespace ft
 			return (_alloc.max_size());
 		}
 		  //////////////////////////////////////////////////////////////////
+		 ////////////////////////////Element_Access////////////////////////
+		//////////////////////////////////////////////////////////////////
+		
+		  //////////////////////////////////////////////////////////////////
 		 ////////////////////////////Modifiers/////////////////////////////
 		//////////////////////////////////////////////////////////////////
 		//insert rules add new nodes, however if key already exists do not add or update, return iterator to found object
-		ft::pair<iterator, bool> insert(const value_type &val)
+		ft::pair<iterator, bool> insert(const value_type &val)//value type is fine for insertion
 		{
 			iterator tmp = find(val);
 			if (tmp == end())//could not be found
 			{
 				_internal_insert(_root, val);
+				if (!_root)
+					_root = _last_inserted;
+				update_sentinel_node();
 				return (ft::make_pair(iterator(_last_inserted, _sentinel), true));
 			}
 			return (ft::make_pair(tmp, false));
 		}
 		size_type	erase(key_type const &key)
 		{//unsure if i can access protected variable from nested class
-			
+			int pre,post;
+			pre = _size;
+			_root = recursive_internal_delete(_root, key);//should return root unless root was deleted
+			update_sentinel_node();
+			post = _size;
+			if (post == pre)
+				return (0);
+			else
+				return (1);
 		}
 		private://internal functions for managing the binary tree
 		pointer	recursive_internal_delete(pointer node, const key_type &key)
-		{
+		{//step 1 find node
 			pointer	tmp;
 			int		balance;
 			if (!node)
@@ -385,7 +400,7 @@ namespace ft
 				if (node->right)
 					node->right->parent = node;
 			}
-			else//this is the node to delete
+			else//Found node
 			{
 				if (node->left == 0 || node->right == 0)//if one or both child is empty
 				{
@@ -416,7 +431,20 @@ namespace ft
 			//check for height and rebalances
 			balance = update_height(node);
 			//LL
-			if (balance > 1 && update_height(node->left))
+			if (balance > 1 && update_height(node->left) >= 0)
+				return (right_rotate(node));
+			else if (balance > 1 && update_height(node->left) < 0)//LR
+			{
+				node->left = left_rotate(node->left);
+				return (right_rotate(node));
+			}
+			else if (balance < -1 && update_height(node->right) <= 0)//RR
+				return (left_rotate(node));
+			if (balance < -1 && update_height(node->right) > 0)//RL
+			{
+				node->right = right_rotate(node->right);
+				return (left_rotate(node));
+			}
 		}
 		//Rotations
 		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
@@ -463,7 +491,7 @@ namespace ft
 		void	update_sentinel_node(void)
 		{
 			pointer tmp;
-			if (_size == 0)//maybe if it was cleared
+			if (_size == 0 || _root == 0)//maybe if it was cleared
 			{
 				_sentinel->parent = 0;
 				_sentinel->left = 0;
@@ -476,12 +504,12 @@ namespace ft
 			tmp = _root;
 			while (tmp->left)
 				tmp = tmp->left;
-			end->left = tmp;
+			_sentinel->left = tmp;
 			_start = tmp;
 			tmp = _root;
 			while (tmp->right)
 				tmp = tmp->right;
-			end->right = tmp;
+			_sentinel->right = tmp;
 			_last = tmp;
 		}
 		void	_recursive_clear(pointer node)//pointer should not be null
@@ -528,6 +556,8 @@ namespace ft
 		int	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
 		{//also returns balance
 			int lh, rh, balance;
+			if (!node)
+				return (0);
 			if (node->left == 0)
 				lh = 0;
 			else

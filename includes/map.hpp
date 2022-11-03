@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/02 17:42:46 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/03 01:28:38 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,12 +146,16 @@ namespace ft
 		}
 		mapped_type	&operator[] (const key_type &k)
 		{
-			insert();//find node, if it exists return the value if it doesn't exist create one and return value
+			//find node, if it exists return the value if it doesn't exist create one and return value
+			return ((insert(ft::make_pair(k, mapped_type())).first)->second);//test if this work
 		}
 		mapped_type	&at(const key_type &key)
 		{
 			//find node if it doesn't exist throw
-			;//throw std::out_of_range("map::at");
+			//throw std::out_of_range("map::at");
+			iterator ret = find(key);
+			if (ret == end())
+				throw std::out_of_range("map::at - key not found")
 		}
 		const mapped_type	&at(const key_type &key)const
 		{
@@ -183,14 +187,18 @@ namespace ft
 		void		erase(iterator first, iterator last)//the range does not include the last iterator
 		{
 			while (first != last)
-				_tree.erase(first++);
+			{
+				key_type  tmp = first->first;
+				first++;
+				_tree.erase(tmp);
+			}
 		}
 		void	swap(map &x)
 		{
 			std::swap(_alloc, x._alloc);
 			std::swap(_key_comp, x._key_comp);
 			std::swap(_value_comp, x._value_comp);
-			_tree.swap(x._tree);
+			_tree.swap(x._tree);//don't forget to code this function
 		}
 		void	clear(void)
 		{
