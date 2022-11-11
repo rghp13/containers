@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 02:18:17 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 22:38:23 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@ namespace ft
 	template <class T, class compare >
 	class tree
 	{
+		template <class T1>
 		class node
 		{
 			public:
-			typedef T		value_type;//this is typically the pair object
+			typedef T1		value_type;//this is typically the pair object
 			typedef node*	node_pointer;
 			private:
 			node_pointer		parent;
@@ -52,17 +53,14 @@ namespace ft
 						if (parent->left == &src)
 							parent->left = this;
 						else if (parent->right == &src)
+							parent->right = this;
 					}
 					left = src.left;
 					right = src.right;
-					//data = src.data;don't transfer pair
+					data = src.data;
 					height = src.height;
 				}
-				return (*this)
-			}
-			bool leaf_test(void)
-			{
-				return (!left && !right)
+				return (*this);
 			}
 			int get_height(node_pointer const src)
 			{
@@ -124,6 +122,7 @@ namespace ft
 						src.parent->right = &src;
 				}
 				std::swap(height, src.height);
+				std::swap(data, src.data);
 				//do I want to swap the key-val pair?
 				//A is being deleted and B is taking its spot
 				//B swaps all A's pointers and height
@@ -132,7 +131,7 @@ namespace ft
 		};
 		public:
 		typedef T																				value_type;//the pair object
-		typedef typename node<T>																node_type;
+		typedef node<T>																			node_type;
 		typedef typename T::first_type															key_type;//added typename
 		typedef typename T::second_type															mapped_type;//you might not need this, leave it to map to return the value
 		typedef compare																			key_comp;
@@ -154,8 +153,7 @@ namespace ft
 			typedef ptrdiff_t									difference_type;
 
 			typedef bidirectional_iterator<T>					self;
-			typedef typename node::node_pointer					node_pointer;
-			typedef ft::tree<value_type>*						tree_pointer;
+			typedef typename node<Tt>::node_pointer					node_pointer;
 			protected:
 			node_pointer	_ptr;
 			node_pointer	_sentinel;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
@@ -376,11 +374,11 @@ namespace ft
 			}
 			return (ft::make_pair(tmp, false));
 		}
-		size_type	erase(key_type const &key)
+		size_type	erase(value_type const &val)
 		{
 			int pre,post;
 			pre = _size;
-			_root = recursive_internal_delete(_root, key);//should return root unless root was deleted
+			_root = recursive_internal_delete(_root, val);//should return root unless root was deleted
 			update_sentinel_node();
 			post = _size;
 			if (post == pre)
@@ -403,28 +401,101 @@ namespace ft
 		//////////////////////////////////////////////////////////////////
 		iterator find(const value_type &k)
 		{
-			;
+			pointer search = _root;
+			while (search)//valid node
+			{
+				if (search->data.first == k.first)//check for match
+					return (iterator(search, _sentinel));
+				if (_comp(k, search->data))//reminder, less than
+					search = search->left;
+				else
+					search = search->right;
+			}
+			//failed to find
+			return (end());
 		}
 		const_iterator find(const value_type &k)const
 		{
-			;
+			pointer search = _root;
+			while (search)//valid node
+			{
+				if (search->data.first == k.first)//check for match
+					return (const_iterator(search, _sentinel));
+				if (_comp(k, search->data))//reminder, less than
+					search = search->left;
+				else
+					search = search->right;
+			}
+			//failed to find
+			return (end());
 		}
+		iterator	lower_bound(const value_type &val)
+		{
+			for (iterator it = begin(); it != end(); it++)
+			{
+				if (_comp(val, *it))
+					continue;
+				else
+					return (it);
+			}
+			return (end());
+		}
+		const_iterator	lower_bound(const value_type &val)const
+		{
+			for (const_iterator it = begin(); it != end(); it++)
+			{
+				if (_comp(val, *it))
+					continue;
+				else
+					return (it);
+			}
+			return (end());
+		}
+		iterator	upper_bound(const value_type &val)//10
+		{
+			for (iterator it = begin(); it != end(); it++)//1
+			{
+				if (_comp(*it, val))//1 < 10 which means 10 is greater than
+					return (it);
+			}
+			return (end());
+		}
+		const_iterator	upper_bound(const value_type &val)const
+		{
+			for (const_iterator it = begin(); it != end(); it++)
+			{
+				if (_comp(*it, val))
+					return (it);
+			}
+			return (end());
+		}
+		ft::pair<iterator, iterator> equal_range(const value_type &val)
+		{
+			return (ft::make_pair(lower_bound(val), upper_bound(val)));
+		}
+		ft::pair<const_iterator, const_iterator> equal_range(const value_type &val)const
+		{
+			return (ft::make_pair(lower_bound(val), upper_bound(val)));
+		}
+		  //////////////////////////////////////////////////////////////////
+		 /////////////////////////Private_Internal/////////////////////////
+		//////////////////////////////////////////////////////////////////
 		private://internal functions for managing the binary tree
-		pointer	recursive_internal_delete(pointer node, const key_type &key)
+		pointer	recursive_internal_delete(pointer node, const value_type &val)
 		{//step 1 find node
 			pointer	tmp;
 			int		balance;
 			if (!node)
 				return (node);//in case you can't find it
-			if (_comp(key, node->data.first))//key is less go left
+			if (_comp(val, node->data))//val is less go left
 			{
-				node->left = recursive_internal_delete(node->left, key);
+				node->left = recursive_internal_delete(node->left, val);
 				if (node->left)//if this isn't replaced with a null set new parent
 					node->left->parent = node;
 			}
-			else if ((_comp(node->data.first, key)))//can't do !_comp because it would catch ==
+			else if ((_comp(node->data, val)))//can't do !_comp because it would catch ==
 			{
-				node->right = recursive_internal_delete(node->right, key);
+				node->right = recursive_internal_delete(node->right, val);
 				if (node->right)
 					node->right->parent = node;
 			}
@@ -449,9 +520,10 @@ namespace ft
 					tmp = node->right;
 					while (tmp->left)
 						tmp = tmp->left;
-					node->swap(*tmp);//tmp node now becomes upper node but keeps key/value
+					node->swap(*tmp);//tmp node now becomes upper node but keeps val/value
+					std::swap(node->data, tmp->data);//undoes swapping of data
 					std::swap(node, tmp);//node pointer now points to the higher node
-					node->right = recursive_internal_delete(node->right, key);//should still find the correct key
+					node->right = recursive_internal_delete(node->right, val);//should still find the correct val
 					if (node->right)//setting parent
 						node->right->parent = node;
 				}
@@ -553,7 +625,7 @@ namespace ft
 			int balance;
 			if (node == 0)
 				return (_last_inserted = create_node(val));//lets me unwind recurse while keeping pointer of new node
-			if (_comp(val.first, node->data.first))//if val is less than search go left
+			if (_comp(val, node->data))//if val is less than search go left
 			{
 				node->left = _internal_insert(node->left, val);
 				node->left->parent = node;//makes sure parent is set
@@ -565,16 +637,16 @@ namespace ft
 			}
 			balance = update_height(node);
 			//LL
-			if (balance > 1 && _comp(val.first,node->data.first))//if out of balance and val is smaller
+			if (balance > 1 && _comp(val,node->data))//if out of balance and val is smaller
 				return (right_rotate(node));
-			else if (balance > 1 && !(_comp(val.first, node->data.first)))//LR
+			else if (balance > 1 && !(_comp(val, node->data)))//LR
 			{
 				node->left = left_rotate(node->left);
 				return (right_rotate(node));
 			}
-			else if (balance < -1 && !(_comp(val.first, node->right->data.first)))//RR
+			else if (balance < -1 && !(_comp(val, node->right->data)))//RR
 				return (left_rotate(node));
-			else if (balance < -1 && _comp(val.first, node->right->data.first))//RL
+			else if (balance < -1 && _comp(val, node->right->data))//RL
 			{
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
@@ -637,7 +709,7 @@ namespace ft
 			_size++;
 			return (ptr);
 		}
-		delete_node(pointer ptr)//update all the pointers before calling this
+		void delete_node(pointer ptr)//update all the pointers before calling this
 		{
 			_alloc.destroy(ptr);
 			_alloc.deallocate(ptr, 1);

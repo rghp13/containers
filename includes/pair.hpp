@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 12:25:06 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/10/21 01:10:08 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 19:30:58 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ namespace ft
 		second_type second;
 		//constructor, operator=
 		pair(): first(), second() {}
-		template <class T1, class T2>
-		pair(const pair<T1, T2> &src): first(src.first), second(src.second) {}
+		template <class U, class V>
+		pair(const pair<U, V> &src): first(src.first), second(src.second) {}
 		pair(const first_type &a, const second_type &b): first(a), second(b) {}
 		pair &operator=(const pair &src)
 		{

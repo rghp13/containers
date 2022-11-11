@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 02:03:25 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 18:15:54 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "make_pair.hpp"
 #include "tree.hpp"
 #include "equal.hpp"
+#include "reverse_iterator.hpp"
 #include "lexicographical_compare.hpp"
 namespace ft
 {
@@ -182,20 +183,16 @@ namespace ft
 		}
 		void		erase(iterator position)
 		{
-			_tree.erase(position->first);
+			_tree.erase(*position);
 		}
 		size_type	erase(const key_type &k)
 		{
-			return (_tree.erase(k));//returns number of elements removed (can only be 1 at most)
+			return (_tree.erase(ft::make_pair(k, mapped_type())));//returns number of elements removed (can only be 1 at most)
 		}
 		void		erase(iterator first, iterator last)//the range does not include the last iterator
 		{
 			while (first != last)
-			{
-				key_type  tmp = first->first;
-				first++;
-				_tree.erase(tmp);
-			}
+				_tree.erase(*first++);
 		}
 		void	swap(map &x)
 		{
@@ -229,7 +226,10 @@ namespace ft
 		size_type		count(const key_type &k)const
 		{
 			const_iterator it = find(ft::make_pair(k, mapped_type());
-			return ((it != end()));
+			if (it != end())
+				return (1);
+			else
+				return (0);
 		}
 		iterator		lower_bound(const key_type &k)
 		{
@@ -247,11 +247,11 @@ namespace ft
 		{
 			return (_tree.upper_bound(ft::make_pair(k, mapped_type()));
 		}
-		pair<const_iterator,const_iterator>	equal_range(const key_type &k)const
+		ft::pair<const_iterator,const_iterator>	equal_range(const key_type &k)const
 		{
 			return (_tree.equal_range(ft::make_pair(k, mapped_type())));
 		}
-		pair<iterator, iterator>			equal_range(const key_type)
+		ft::pair<iterator, iterator>	equal_range(const key_type k)
 		{
 			return (_tree.equal_range(ft::make_pair(k, mapped_type())));
 		}
@@ -260,6 +260,7 @@ namespace ft
 			return (_alloc);
 		}
 	};
+
 	template <class Key, class T, class Compare, class Alloc >
 	void swap(ft::map<Key, T, Compare, Alloc> &lhs, ft::map<Key, T, Compare, Alloc> &rhs)
 	{
