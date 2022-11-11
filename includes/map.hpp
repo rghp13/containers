@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/03 01:28:38 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 02:03:25 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,11 +155,15 @@ namespace ft
 			//throw std::out_of_range("map::at");
 			iterator ret = find(key);
 			if (ret == end())
-				throw std::out_of_range("map::at - key not found")
+				throw std::out_of_range("map::at key not found");
+			return (ret->second);
 		}
 		const mapped_type	&at(const key_type &key)const
 		{
-			;//same as previous function
+			const_iterator ret = find(key);
+			if (ret == end())
+				throw std::out_of_range("map::at key not found");
+			return (ret->second);
 		}
 		ft::pair<iterator, bool>	insert(const value_type &value)
 		{
@@ -177,7 +181,7 @@ namespace ft
 				_tree.insert(*first++);
 		}
 		void		erase(iterator position)
-		 {//References and iterators to the erased elements are invalidated. Other references and iterators are not
+		{
 			_tree.erase(position->first);
 		}
 		size_type	erase(const key_type &k)
@@ -195,10 +199,12 @@ namespace ft
 		}
 		void	swap(map &x)
 		{
+			if (this == &x)
+				return;
 			std::swap(_alloc, x._alloc);
 			std::swap(_key_comp, x._key_comp);
 			std::swap(_value_comp, x._value_comp);
-			_tree.swap(x._tree);//don't forget to code this function
+			_tree.swap(x._tree);
 		}
 		void	clear(void)
 		{
@@ -254,7 +260,7 @@ namespace ft
 			return (_alloc);
 		}
 	};
-	template < class Key, class T, class Compare, class Alloc >
+	template <class Key, class T, class Compare, class Alloc >
 	void swap(ft::map<Key, T, Compare, Alloc> &lhs, ft::map<Key, T, Compare, Alloc> &rhs)
 	{
 		lhs.swap(rhs);

@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/03 01:28:48 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 02:18:17 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,6 +355,13 @@ namespace ft
 		  //////////////////////////////////////////////////////////////////
 		 ////////////////////////////Modifiers/////////////////////////////
 		//////////////////////////////////////////////////////////////////
+		void clear(void)
+		{
+			_recursive_clear(_root);
+			_root = 0;
+			update_sentinel_node();
+		}
+		
 		//insert rules add new nodes, however if key already exists do not add or update, return iterator to found object
 		ft::pair<iterator, bool> insert(const value_type &val)//value type is fine for insertion
 		{
@@ -370,7 +377,7 @@ namespace ft
 			return (ft::make_pair(tmp, false));
 		}
 		size_type	erase(key_type const &key)
-		{//unsure if i can access protected variable from nested class
+		{
 			int pre,post;
 			pre = _size;
 			_root = recursive_internal_delete(_root, key);//should return root unless root was deleted
@@ -380,6 +387,27 @@ namespace ft
 				return (0);
 			else
 				return (1);
+		}
+		void	swap(tree &x)
+		{
+			std::swap(_comp, x._comp);
+			std::swap(_alloc, x._alloc);
+			std::swap(_size, x._size);
+			std::swap(_root, x._root);
+			std::swap(_sentinel, x._sentinel);
+			std::swap(_start, x._start);
+			std::swap(_last, x._last);
+		}
+		  //////////////////////////////////////////////////////////////////
+		 ///////////////////////////Operations/////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		iterator find(const value_type &k)
+		{
+			;
+		}
+		const_iterator find(const value_type &k)const
+		{
+			;
 		}
 		private://internal functions for managing the binary tree
 		pointer	recursive_internal_delete(pointer node, const key_type &key)
@@ -489,7 +517,7 @@ namespace ft
 			return (y);
 		}
 		void	update_sentinel_node(void)
-		{
+		{//updates sentinel and _start _last
 			pointer tmp;
 			if (_size == 0 || _root == 0)//maybe if it was cleared
 			{
