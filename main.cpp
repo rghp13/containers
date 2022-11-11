@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 18:19:33 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 23:44:01 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 	//#include "includes/stack.hpp"
 	//#include "includes/vector.hpp"
 #endif
-// #include <stdlib.h>
+ #include <stdlib.h>
 
  #define MAX_RAM 4294967296
  #define BUFFER_SIZE 4096

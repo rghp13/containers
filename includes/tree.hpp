@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 22:38:23 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/11 23:07:16 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,6 @@ namespace ft
 					height = src.height;
 				}
 				return (*this);
-			}
-			int get_height(node_pointer const src)
-			{
-				if (!src)
-					return (0);
-				return (src->height);
 			}
 			void swap(node &src)//whats the end goal? complete swap does nothing, maybe you just want to swap the data?
 			{//only use is maybe if you want to move it to a new tree but the pointers still point to the old tree's data
@@ -267,7 +261,7 @@ namespace ft
 			_sentinel = _alloc.allocate(1);
 			_alloc.construct(_sentinel, value_type());//avoids incrementing size
 		}
-		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), 
+		tree(const tree &src): _alloc(src._alloc), _comp(src._comp)
 		{
 			_sentinel = _alloc.allocate(1);
 			_alloc.construct(_sentinel, value_type());
@@ -309,7 +303,7 @@ namespace ft
 		}
 		iterator	end(void)
 		{
-			return (iterator(_sentinel ,_sentinel))
+			return (iterator(_sentinel ,_sentinel));
 		}
 		const_iterator	end(void)const
 		{
@@ -651,7 +645,7 @@ namespace ft
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
 			}
-			return (node)//if no rotate return unchanged pointer
+			return (node);//if no rotate return unchanged pointer
 		}
 		int	update_height(pointer node)//new nodes start at 1 empty is 0 returns if out of balance
 		{//also returns balance
@@ -705,7 +699,7 @@ namespace ft
 		pointer	create_node(const value_type &val)//you still need to make the pointer connections
 		{
 			pointer ptr = _alloc.allocate(1);
-			_alloc.construct(ptr, node(val));
+			_alloc.construct(ptr, node<value_type>(val));
 			_size++;
 			return (ptr);
 		}
