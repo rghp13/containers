@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 23:07:16 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/12 15:22:09 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ namespace ft
 			public:
 			typedef T1		value_type;//this is typically the pair object
 			typedef node*	node_pointer;
-			private:
+			//private:
+			value_type	data;
 			node_pointer		parent;
 			node_pointer		left;
 			node_pointer		right;
-			value_type	data;
 			int height;
-			public:
+			//public:
 			node(const value_type &src, node_pointer parent = 0, node_pointer left = 0, node_pointer right = 0, int height = 1): data(src), parent(parent), left(left), right(right), height(height) {}
-			node(const node &src)
+			/*node(const node &src)
 			{
 				*this = src;
-			}
+			}*/
 			~node() {}
 			node &operator=(const node &src)//this is taking all the pointers from src
 			{
@@ -166,8 +166,10 @@ namespace ft
 				}
 				return (*this);
 			}
-			reference				operator*()			{return(_ptr->value);}//use/include/c++/11/bits/stl_tree.h line 256
-			pointer					operator->()		{return(&(_ptr->value));}
+			reference				operator*()			{return(_ptr->data);}
+			const reference			operator*()const	{return(_ptr->data);}
+			pointer					operator->()		{return(&_ptr->data);}
+			pointer					operator->()const	{return(&_ptr->data);}
 			bidirectional_iterator	&operator++()
 			{
 				if (_ptr == _sentinel)//if out of bounds do nothing
@@ -247,16 +249,16 @@ namespace ft
 		typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		//add iterators later
 		private:
+		allocator_type	_alloc;
+		key_comp		_comp;//this is the value_compare class from map
 		pointer			_start;//left most node
 		pointer			_last;//right most node
 		pointer			_sentinel;//node that exists out of bounds
 		pointer			_last_inserted;
 		pointer			_root;//uppermost node
 		size_type		_size;
-		allocator_type	_alloc;
-		key_comp		_comp;//this is the value_compare class from map
 		public:
-		tree(const compare &comp): _alloc(allocator_type()), _comp(comp), _start(0), _last(0), _size(0), _root(0)
+		tree(const compare &comp): _alloc(allocator_type()), _comp(comp), _start(0), _last(0), _root(0), _size(0)
 		{
 			_sentinel = _alloc.allocate(1);
 			_alloc.construct(_sentinel, value_type());//avoids incrementing size
@@ -274,7 +276,7 @@ namespace ft
 		{
 			clear();
 			_alloc.destroy(_sentinel);//removes _sentinel's node which isn't included in the clear()
-			_alloc.deallocate(_sentinel);
+			_alloc.deallocate(_sentinel, 1);
 		}
 		tree	&operator=(const tree &x)
 		{

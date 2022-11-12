@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/12 00:14:34 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/12 14:14:14 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace ft
 		class value_compare : public std::binary_function<value_type, value_type, bool>//verify if this is legal or I should make my own
 		{
 			friend class map<Key, T, Compare, Alloc>;
+			friend class ft::tree<value_type, value_compare>;
 			protected:
 			key_compare	comp;
 			value_compare(key_compare c): comp(c) {}
@@ -75,19 +76,19 @@ namespace ft
 			_tree = tree<value_type, value_compare>(_value_comp);
 		}*/
 		template <class InputIterator>
-		map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
+		map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()): _key_comp(comp), _alloc(alloc), _value_comp(key_compare(comp)), _tree(_value_comp)
 		{
-			_key_comp = comp;
+			/*_key_comp = comp;
 			_alloc = alloc;
-			_value_comp = value_compare();
+			_value_comp = value_compare();*/
 			insert(first, last);
 		}
-		map(const map &x)
+		map(const map &x): _key_comp(x._key_comp), _alloc(x._alloc), _value_comp(x._value_comp), _tree(x._tree)
 		{
-			_alloc = x._alloc;
+			/*_alloc = x._alloc;
 			_key_comp = x._key_comp;
 			_value_comp = x._value_comp;
-			_tree = x._tree;
+			_tree = x._tree;*/
 		}
 		~map(){}
 		map	&operator=(const map &x)
