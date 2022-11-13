@@ -13,7 +13,7 @@ NAME					=		containers
 OBJ_NAME				=		$(SRC_NAME:.cpp=.o)
 CC						=		c++
 RM						=		rm -f
-CFLAG					=		-Wall -Wextra -Werror -std=c++98
+CFLAG					=		-Wall -Wextra -Werror -std=c++98 -g
 SRC						=		$(SRC_NAME)
 OBJ						=		$(OBJ_NAME)
 

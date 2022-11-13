@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/12 15:22:09 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/13 19:43:49 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ namespace ft
 				return (*this);
 			}
 			reference				operator*()			{return(_ptr->data);}
-			const reference			operator*()const	{return(_ptr->data);}
+			//const reference			operator*()const	{return(_ptr->data);}
 			pointer					operator->()		{return(&_ptr->data);}
 			pointer					operator->()const	{return(&_ptr->data);}
 			bidirectional_iterator	&operator++()
@@ -546,7 +546,7 @@ namespace ft
 		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
 		pointer	right_rotate(pointer y)//should not be null rotates left to the right
 		{
-			pointer x = y->left;
+			pointer x = y->left;//left was null right was height of 4
 			pointer t2 = x->right;
 			//rotate
 			x->right = y;
@@ -635,12 +635,12 @@ namespace ft
 			//LL
 			if (balance > 1 && _comp(val,node->data))//if out of balance and val is smaller
 				return (right_rotate(node));
-			else if (balance > 1 && !(_comp(val, node->data)))//LR
+			else if (balance > 1 && (_comp(node->data, val)))//LR
 			{
 				node->left = left_rotate(node->left);
 				return (right_rotate(node));
 			}
-			else if (balance < -1 && !(_comp(val, node->right->data)))//RR
+			else if (balance < -1 && (_comp(node->right->data, val)))//RR
 				return (left_rotate(node));
 			else if (balance < -1 && _comp(val, node->right->data))//RL
 			{

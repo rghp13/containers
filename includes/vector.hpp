@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/02 17:45:49 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/13 17:25:53 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,9 +210,13 @@ namespace ft
 				return (*this);
 			//clear current data
 			clear();
+			_alloc.deallocate(_ptr, _capacity);//doing this so that capacity is the same as the source vector
+			_ptr = 0;
 			_alloc = x._alloc;
+			_capacity = 0;
+			reserve(x._capacity);
 			//move data over here
-			assign(x.begin, x.end());//think about capacity
+			assign(x.begin(), x.end());//think about capacity
 			//update all vars
 			return (*this);
 		}

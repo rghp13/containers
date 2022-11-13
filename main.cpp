@@ -6,22 +6,22 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/11 23:44:01 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/13 00:41:13 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
-//#include <deque>
-#if 0//CREATE A REAL STL EXAMPLE
+#include <deque>
+#if 0
 	namespace ft = std;
 	#include <map>
 	#include <stack>
 	#include <vector>
 #else
 	#include "includes/map.hpp"
-	//#include "includes/stack.hpp"
-	//#include "includes/vector.hpp"
+	#include "includes/stack.hpp"
+	#include "includes/vector.hpp"
 #endif
  #include <stdlib.h>
 
@@ -58,24 +58,24 @@
 
  #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-// template<typename T>
-// class MutantStack : public ft::stack<T>
-// {
-// public:
-// 	MutantStack() {}
-// 	MutantStack(const MutantStack<T>& src) { *this = src; }
-// 	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-// 	{
-// 		this->c = rhs.c;
-// 		return *this;
-// 	}
-// 	~MutantStack() {}
+template<typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+	{
+		this->_ctnr = rhs._ctnr;
+		return *this;
+	}
+	~MutantStack() {}
 
-// 	typedef typename ft::stack<T>::container_type::iterator iterator;
+	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-// 	iterator begin() { return this->c.begin(); }
-// 	iterator end() { return this->c.end(); }
-// };
+	iterator begin() { return this->_ctnr.begin(); }
+	iterator end() { return this->_ctnr.end(); }
+};
 
 int main(int argc, char** argv) {
 	if (argc != 2)
@@ -88,14 +88,14 @@ int main(int argc, char** argv) {
 	const int seed = atoi(argv[1]);
 	srand(seed);
 
-	/*ft::vector<std::string> vector_str;
+	ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
 	ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;*/
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	ft::map<int, int> map_int;
 
-	/*for (int i = 0; i < COUNT; i++)
+	for (int i = 0; i < COUNT; i++)
 	{
 		vector_buffer.push_back(Buffer());
 	}
@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 	catch(const std::exception& e)
 	{
 		//NORMAL ! :P
-	}*/
+	}
 	
 	for (int i = 0; i < COUNT; ++i)
 	{
@@ -137,13 +137,13 @@ int main(int argc, char** argv) {
 	{
 		ft::map<int, int> copy = map_int;
 	}
-	/*MutantStack<char> iterable_stack;
+	MutantStack<char> iterable_stack;
 	for (char letter = 'a'; letter <= 'z'; letter++)
 		iterable_stack.push(letter);
 	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
 	{
 		std::cout << *it;
 	}
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 	return (0);
 }
