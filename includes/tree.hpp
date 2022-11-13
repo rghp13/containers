@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/13 19:43:49 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/13 21:42:55 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -536,11 +536,12 @@ namespace ft
 			}
 			else if (balance < -1 && update_height(node->right) <= 0)//RR
 				return (left_rotate(node));
-			if (balance < -1 && update_height(node->right) > 0)//RL
+			else if (balance < -1 && update_height(node->right) > 0)//RL
 			{
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
 			}
+			return (node);//nothing to rebalance
 		}
 		//Rotations
 		//https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
@@ -633,7 +634,7 @@ namespace ft
 			}
 			balance = update_height(node);
 			//LL
-			if (balance > 1 && _comp(val,node->data))//if out of balance and val is smaller
+			/*if (balance > 1 && _comp(val,node->data))//if out of balance and val is smaller
 				return (right_rotate(node));
 			else if (balance > 1 && (_comp(node->data, val)))//LR
 			{
@@ -646,6 +647,28 @@ namespace ft
 			{
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
+			}*/
+			if (balance > 1)
+			{
+				balance = update_height(node->left);
+				if (balance > 0)
+					return (right_rotate(node));
+				else if (balance < 0)//LR
+				{
+					node->left = left_rotate(node->left);
+					return (right_rotate(node));
+				}
+			}
+			else if (balance < -1)
+			{
+				balance = update_height(node->right);
+				if (balance > 0)
+				{
+					node->right = right_rotate(node->right);
+					return (left_rotate(node));
+				}
+				else if (balance < 0)
+					return (left_rotate(node));
 			}
 			return (node);//if no rotate return unchanged pointer
 		}

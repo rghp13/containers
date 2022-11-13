@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 18:07:06 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/08/10 16:13:22 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/13 21:40:40 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,35 +25,35 @@ namespace ft
 		typedef Container container_type;
 		typedef typename Container::size_type	size_type;
 	//constructors
-	explicit	stack(const container_type &ctnr = container_type()): _ctnr(ctnr) {}
-				stack(const stack	&other): _ctnr(other._ctnr) {}
+	explicit	stack(const container_type &ctnr = container_type()): c(ctnr) {}
+				stack(const stack	&other): c(other.c) {}
 				//~stack(void) {}for some reasons stacks don't need destructors?
 				//member functions size,empty,top,push,pop
 		protected:
-		container_type _ctnr;
+		container_type c;
 		public:
 	value_type	&top(void)
-	{	return (_ctnr.back());}
+	{	return (c.back());}
 	value_type	&top(void)const
-	{	return (_ctnr.back());}
+	{	return (c.back());}
 	bool		empty(void)const
-	{	return (_ctnr.empty());}
+	{	return (c.empty());}
 	size_type	size(void)const
-	{	return (_ctnr.size());}
+	{	return (c.size());}
 	void		push(const value_type &value)
-	{	return (_ctnr.push_back(value));}
+	{	return (c.push_back(value));}
 	void		pop(void)
-	{	_ctnr.pop_back();}
+	{	c.pop_back();}
 		//need at least 1 friend
 		//template <typename T, class container_type>
 		friend bool operator<(const stack<T, container_type> &lhs, const stack<T, container_type> &rhs)
 		{
-			return (lhs._ctnr < rhs._ctnr);
+			return (lhs.c < rhs.c);
 		}
 		//template <typename T, class container_type>
 		friend bool operator==(const stack<T, container_type> &lhs, const stack<T, container_type> &rhs)
 		{
-			return (lhs._ctnr == rhs._ctnr);
+			return (lhs.c == rhs.c);
 		}
 	};
 	//operator != == <= > >=
