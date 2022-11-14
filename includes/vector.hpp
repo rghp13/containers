@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/13 17:25:53 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/14 15:51:52 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ namespace ft
 		}
 		bool	empty(void)const
 		{
-			if (_size == 0)
+			if (_size <= 0)
 				return (true);
 			return (false);
 		}
@@ -415,7 +415,7 @@ namespace ft
 		}
 		void pop_back(void)
 		{
-			_alloc.destroy(&_ptr[_size - 1]);
+				_alloc.destroy(&_ptr[--_size]);
 		}
 		void swap(vector &x)
 		{
@@ -492,7 +492,7 @@ namespace ft
 	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
 		if (lhs.size() == rhs.size())//learn about lexicographical compare to complete this
-			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		return (false);
 	}
 	template <class T, class Alloc>

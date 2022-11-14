@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/14 14:09:24 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/14 15:25:06 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 
  #define MAX_RAM 4294967296
  #define BUFFER_SIZE 4096
- struct Buffer
+/* struct Buffer
  {
  	int idx;
  	char buff[BUFFER_SIZE];
  };
-/*int main(void)
+int main(void)
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
@@ -54,7 +54,7 @@
 		ptr++;
 	}
 	std::cout << qwe[600] << std::endl;
-}*/
+}
 
  #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
@@ -147,5 +147,40 @@ int main(int argc, char** argv) {
 		std::cout << *it;
 	}
 	std::cout << std::endl;
+	return (0);
+}*/
+int main()
+{
+	ft::stack<float>								other_stack;
+	ft::vector<std::string>							lst;
+
+	lst.push_back("salut");
+	lst.push_back("tu vas bien?");
+	lst.push_back("super");
+	lst.push_back("et toi?");
+
+	ft::stack<std::string, ft::vector<std::string> >	my_stack(lst);
+
+	std::cout << std::boolalpha << other_stack.empty() << std::endl;
+	other_stack.push(8.5); // 8.5;
+	other_stack.push(42.4242); // 8.5; 42.4242;
+	std::cout << other_stack.size() << '\n'; // 2
+	other_stack.pop(); // 8.5;
+	std::cout << other_stack.size() << '\n'; // 1
+	other_stack.push(78541.987); // 8.5; 78541.987;
+	std::cout << other_stack.size() << '\n'; // 2
+	std::cout << other_stack.top() << '\n'; //78541.987
+	std::cout << std::boolalpha << other_stack.empty() << std::endl;
+
+	const std::string const_top = my_stack.top();
+
+	std::cout << "const top: " << const_top << '\n';
+
+	while (!my_stack.empty())
+	{
+		std::cout << my_stack.top() << '\n';
+		my_stack.pop();
+	}
+
 	return (0);
 }
