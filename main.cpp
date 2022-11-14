@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/13 21:43:09 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/14 14:09:24 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,15 @@ int main(int argc, char** argv) {
 	{
 		map_int.insert(ft::make_pair(rand(), rand()));
 	}
-
+	std::cout << map_int.size() << std::endl;
 	int sum = 0;
 	for (int i = 0; i < 10000; i++)
 	{
 		int access = rand();
 		sum += map_int[access];
+		map_int.erase(access);
 	}
+	std::cout << map_int.size() << std::endl;
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
 	{

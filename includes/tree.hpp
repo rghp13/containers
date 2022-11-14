@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/13 21:42:55 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/14 14:09:28 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ namespace ft
 						src.parent->right = &src;
 				}
 				std::swap(height, src.height);
-				std::swap(data, src.data);
+				//std::swap(data, src.data);
 				//do I want to swap the key-val pair?
 				//A is being deleted and B is taking its spot
 				//B swaps all A's pointers and height
@@ -517,7 +517,7 @@ namespace ft
 					while (tmp->left)
 						tmp = tmp->left;
 					node->swap(*tmp);//tmp node now becomes upper node but keeps val/value
-					std::swap(node->data, tmp->data);//undoes swapping of data
+					//std::swap(node->data, tmp->data);//undoes swapping of data maybe it's best not to touch the data
 					std::swap(node, tmp);//node pointer now points to the higher node
 					node->right = recursive_internal_delete(node->right, val);//should still find the correct val
 					if (node->right)//setting parent
@@ -527,19 +527,25 @@ namespace ft
 			//check for height and rebalances
 			balance = update_height(node);
 			//LL
-			if (balance > 1 && update_height(node->left) >= 0)
-				return (right_rotate(node));
-			else if (balance > 1 && update_height(node->left) < 0)//LR
+			if (balance > 1)
 			{
-				node->left = left_rotate(node->left);
-				return (right_rotate(node));
+				if (update_height(node->left) >= 0)
+					return (right_rotate(node));
+				else if (update_height(node->left) < 0)//LR
+				{
+					node->left = left_rotate(node->left);
+					return (right_rotate(node));
+				}
 			}
-			else if (balance < -1 && update_height(node->right) <= 0)//RR
-				return (left_rotate(node));
-			else if (balance < -1 && update_height(node->right) > 0)//RL
+			if (balance < -1)
 			{
-				node->right = right_rotate(node->right);
-				return (left_rotate(node));
+				if (update_height(node->right) <= 0)//RR
+					return (left_rotate(node));
+				else if (update_height(node->right) > 0)//RL
+				{
+					node->right = right_rotate(node->right);
+					return (left_rotate(node));
+				}
 			}
 			return (node);//nothing to rebalance
 		}
@@ -648,10 +654,10 @@ namespace ft
 				node->right = right_rotate(node->right);
 				return (left_rotate(node));
 			}*/
-			if (balance > 1)
+			if (balance > 1)//then there must be a rotate
 			{
 				balance = update_height(node->left);
-				if (balance > 0)
+				if (balance >= 0)
 					return (right_rotate(node));
 				else if (balance < 0)//LR
 				{
@@ -659,7 +665,7 @@ namespace ft
 					return (right_rotate(node));
 				}
 			}
-			else if (balance < -1)
+			else if (balance < -1)//then there must be a rotate
 			{
 				balance = update_height(node->right);
 				if (balance > 0)
@@ -667,7 +673,7 @@ namespace ft
 					node->right = right_rotate(node->right);
 					return (left_rotate(node));
 				}
-				else if (balance < 0)
+				else if (balance <= 0)
 					return (left_rotate(node));
 			}
 			return (node);//if no rotate return unchanged pointer
