@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/14 15:25:06 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:34:25 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,38 +149,49 @@ int main(int argc, char** argv) {
 	std::cout << std::endl;
 	return (0);
 }*/
-int main()
+template <class T>
+void	print(ft::vector<ft::vector<T> >& lst)
 {
-	ft::stack<float>								other_stack;
-	ft::vector<std::string>							lst;
-
-	lst.push_back("salut");
-	lst.push_back("tu vas bien?");
-	lst.push_back("super");
-	lst.push_back("et toi?");
-
-	ft::stack<std::string, ft::vector<std::string> >	my_stack(lst);
-
-	std::cout << std::boolalpha << other_stack.empty() << std::endl;
-	other_stack.push(8.5); // 8.5;
-	other_stack.push(42.4242); // 8.5; 42.4242;
-	std::cout << other_stack.size() << '\n'; // 2
-	other_stack.pop(); // 8.5;
-	std::cout << other_stack.size() << '\n'; // 1
-	other_stack.push(78541.987); // 8.5; 78541.987;
-	std::cout << other_stack.size() << '\n'; // 2
-	std::cout << other_stack.top() << '\n'; //78541.987
-	std::cout << std::boolalpha << other_stack.empty() << std::endl;
-
-	const std::string const_top = my_stack.top();
-
-	std::cout << "const top: " << const_top << '\n';
-
-	while (!my_stack.empty())
+	for (typename ft::vector<ft::vector<T> >::iterator it = lst.begin(); it != lst.end(); it++)
 	{
-		std::cout << my_stack.top() << '\n';
-		my_stack.pop();
+		for (typename ft::vector<T>::iterator it2 = it->begin(); it2 != it->end(); it2++)
+			std::cout << *it2 << ' ';
+		std::cout << '\n';
 	}
+}
 
-	return (0);
+template <class T>
+void	print(ft::vector<T>& lst)
+{
+	for (typename ft::vector<T>::iterator it = lst.begin(); it != lst.end(); it++)
+		std::cout << *it << ' ';
+	std::cout << '\n';
+}
+
+
+int main ()
+{
+  ft::vector<int> myvector (3,100);
+  ft::vector<int>::iterator it;
+
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
+
+  myvector.insert (it,2,300);
+
+  // "it" no longer valid, get a new one:
+  it = myvector.begin();
+
+  ft::vector<int> anothervector (2,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+
+  return 0;
 }

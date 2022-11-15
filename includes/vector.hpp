@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/14 15:51:52 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:42:34 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace ft
 			//pointer		base() const	{return(_M_current);}//base is only for reverse iterators apparently
 			reference	operator*()		{return(*_M_current);}//read stl_iterator.h and stl_vector.h
 			pointer		operator->()	{return(_M_current);}
-			reference	operator[](difference_type const dif) const {return(*(_M_current[dif]));}//random
+			reference	operator[](difference_type const dif) const {return(_M_current[dif]);}//random
 			random_access_iterator &operator=(random_access_iterator const &src)
 			{
 				if (&src != this)
@@ -173,8 +173,8 @@ namespace ft
 		};
 		typedef random_access_iterator<value_type>				iterator;
 		typedef random_access_iterator<const value_type, true>	const_iterator;
-		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
-		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		private:
 		pointer			_ptr;
 		size_type		_size;//current amt of elements
@@ -361,6 +361,7 @@ namespace ft
 			shiftr(i, 1);
 			_alloc.construct(&_ptr[i], val);
 			_size += 1;
+			return (iterator(_ptr + i));
 		}
 		void insert(iterator pos, size_type n, const value_type &val)//fill
 		{
@@ -389,11 +390,12 @@ namespace ft
 		iterator erase(iterator pos)//removes a single item then shift left
 		{
 			size_type i = &*pos - &*begin();//no need to protect from erasing an empty vector
-			_alloc.destroy(&_ptr[i]);
-			shiftl(i + 1, 1);
+			_alloc.destroy(&_ptr[i++]);
+			shiftl(i, 1);
 			_size -= 1;
 			return (pos);
 		}
+
 		iterator erase(iterator first, iterator last)
 		{
 			size_type f = &*first - &*begin();
@@ -401,10 +403,9 @@ namespace ft
 			size_type n = l - f;
 			for (size_type i = f; i < l; i++)
 				_alloc.destroy(&_ptr[i]);
+			if (l != _size - n)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
+				shiftl(l, n);//this might leave a blank space need to test this
 			_size -= n;
-			if (l == _size)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
-				return (first);
-			shiftl(l + 1, n);//this might leave a blank space need to test this
 			return (first);
 		}
 		void push_back(const value_type &val)
@@ -466,24 +467,25 @@ namespace ft
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
 		{
-			if (_size == 0)
+			if (_size == 0 || n == 0)
 				return ;
 			for (size_type i = _size - 1; i >= start; i--)//starts from end of array
 			{
-				_alloc.construct(&_ptr[i + n], _ptr[i]);
+				_alloc.construct((_ptr + (i + n)), _ptr[i]);
 				_alloc.destroy(&_ptr[i]);
+				if (i == start)
+					break;
 			}
 		}
 		//start is where the first piece of valid data to shift is
 		void shiftl(size_type start, size_type n)//make sure that you've already destroyed what you're shifting into
 		{
-			if (_size == 0)
+			if (_size == 0 || n == 0)
 				return;
-			for (size_type i = start; i < start + n; i++)
+			for (size_type i = start; i < _size; i++)
 			{
-				_alloc.construct(&_ptr[i - n], _ptr[i]);
+				_alloc.construct((_ptr + (i - n)), _ptr[i]);
 				_alloc.destroy(&_ptr[i]);
-				
 			}
 		}
 	};
