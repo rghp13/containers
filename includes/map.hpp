@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/12 14:14:14 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/15 20:49:56 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ namespace ft
 		typedef const value_type&										const_reference;
 		typedef typename allocator_type::pointer						pointer;
 		typedef typename allocator_type::const_pointer					const_pointer;
-		class value_compare : public std::binary_function<value_type, value_type, bool>//verify if this is legal or I should make my own
+		class value_compare : public std::binary_function<value_type, value_type, bool>
 		{
 			friend class map<Key, T, Compare, Alloc>;
 			friend class ft::tree<value_type, value_compare>;
 			protected:
 			key_compare	comp;
 			value_compare(key_compare c): comp(c) {}
-			value_compare(const value_compare &src): comp(src.comp) {}//added for copy construction
+			//value_compare(const value_compare &src): comp(src.comp) {}//added for copy construction
 			public:
 			typedef bool	result_type;
 			typedef value_type	first_argument_type;
@@ -226,8 +226,7 @@ namespace ft
 		}//count equal range lower bound upperbound
 		size_type		count(const key_type &k)const
 		{
-			const_iterator it = find(ft::make_pair(k, mapped_type()));
-			if (it != end())
+			if (_tree.find(ft::make_pair(k, mapped_type())) != end())
 				return (1);
 			else
 				return (0);

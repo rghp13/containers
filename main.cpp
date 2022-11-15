@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/14 23:34:25 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:58:49 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,49 +149,26 @@ int main(int argc, char** argv) {
 	std::cout << std::endl;
 	return (0);
 }*/
-template <class T>
-void	print(ft::vector<ft::vector<T> >& lst)
+template <class Key, class T>
+void	print(ft::map<Key, T>& lst)
 {
-	for (typename ft::vector<ft::vector<T> >::iterator it = lst.begin(); it != lst.end(); it++)
-	{
-		for (typename ft::vector<T>::iterator it2 = it->begin(); it2 != it->end(); it2++)
-			std::cout << *it2 << ' ';
-		std::cout << '\n';
-	}
+	for (typename ft::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+		std::cout << it->first << " => " << it->second << '\n';
 }
-
-template <class T>
-void	print(ft::vector<T>& lst)
-{
-	for (typename ft::vector<T>::iterator it = lst.begin(); it != lst.end(); it++)
-		std::cout << *it << ' ';
-	std::cout << '\n';
-}
-
 
 int main ()
 {
-  ft::vector<int> myvector (3,100);
-  ft::vector<int>::iterator it;
+  ft::map<char,int> mymap;
 
-  it = myvector.begin();
-  it = myvector.insert ( it , 200 );
+  mymap['a']=10;
+  mymap['b']=20;
+  mymap['c']=30;
 
-  myvector.insert (it,2,300);
-
-  // "it" no longer valid, get a new one:
-  it = myvector.begin();
-
-  ft::vector<int> anothervector (2,400);
-  myvector.insert (it+2,anothervector.begin(),anothervector.end());
-
-  int myarray [] = { 501,502,503 };
-  myvector.insert (myvector.begin(), myarray, myarray+3);
-
-  std::cout << "myvector contains:";
-  for (it=myvector.begin(); it<myvector.end(); it++)
-    std::cout << ' ' << *it;
-  std::cout << '\n';
+  while (!mymap.empty())
+  {
+    std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+    mymap.erase(mymap.begin());
+  }
 
   return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/14 14:09:28 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 00:39:14 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,9 @@ namespace ft
 			typedef std::bidirectional_iterator_tag				iterator_category;
 			typedef ptrdiff_t									difference_type;
 
-			typedef bidirectional_iterator<T>					self;
-			typedef typename node<Tt>::node_pointer					node_pointer;
+			//typedef typename node<Tt>::node_pointer					node_pointer;
+			typedef	typename tree::node_type							node_type;
+			typedef node_type*											node_pointer;
 			protected:
 			node_pointer	_ptr;
 			node_pointer	_sentinel;//points to sentinel, parent == root, left == leftmost node, right equals rightmost node
@@ -170,6 +171,10 @@ namespace ft
 			//const reference			operator*()const	{return(_ptr->data);}
 			pointer					operator->()		{return(&_ptr->data);}
 			pointer					operator->()const	{return(&_ptr->data);}
+			operator bidirectional_iterator<const Tt, true>()//conversion from non-const to const
+			{
+				return (bidirectional_iterator<const Tt, true>(_ptr, _sentinel));
+			}
 			bidirectional_iterator	&operator++()
 			{
 				if (_ptr == _sentinel)//if out of bounds do nothing
@@ -233,16 +238,16 @@ namespace ft
 			{
 				return (_ptr != src._ptr);
 			}
-			bool operator==(bidirectional_iterator<Tt, true> const &src)const
+			bool operator==(bidirectional_iterator<const Tt, true> const &src)const
 			{
 				return (_ptr == src._ptr);
 			}
-			bool operator!=(bidirectional_iterator<Tt, true> const &src)const
+			bool operator!=(bidirectional_iterator<const Tt, true> const &src)const
 			{
 				return (_ptr != src._ptr);
 			}
 		};
-		typedef bidirectional_iterator<value_type>												iterator;
+		typedef bidirectional_iterator<value_type, false>										iterator;
 		typedef bidirectional_iterator<const value_type, true>									const_iterator;
 		typedef typename ft::reverse_iterator<iterator>											reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator>									const_reverse_iterator;
@@ -287,6 +292,7 @@ namespace ft
 				non_balancing_copy(x._root);//remember this updates _root
 				update_sentinel_node();
 			}
+			return (*this);
 		}
 		  //////////////////////////////////////////////////////////////////
 		 /////////////////////////ITERATORS////////////////////////////////
@@ -375,6 +381,8 @@ namespace ft
 			int pre,post;
 			pre = _size;
 			_root = recursive_internal_delete(_root, val);//should return root unless root was deleted
+			if (_root && _root->parent)
+				_root->parent = 0;
 			update_sentinel_node();
 			post = _size;
 			if (post == pre)
@@ -617,11 +625,14 @@ namespace ft
 		}
 		void	_recursive_clear(pointer node)//pointer should not be null
 		{
-			if (node->left)
-				_recursive_clear(node->left);
-			if (node->right)
-				_recursive_clear(node->right);
-			delete_node(node);
+			if (node)
+			{
+				if (node->left)
+					_recursive_clear(node->left);
+				if (node->right)
+					_recursive_clear(node->right);
+				delete_node(node);
+			}
 		}
 		pointer	_internal_insert(pointer node, const value_type &val)//already checked for duplicates
 		{// THINK does newnode have a parent
