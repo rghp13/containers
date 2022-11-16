@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/16 00:39:14 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:34:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,7 +289,8 @@ namespace ft
 			{
 				clear();
 				//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
-				non_balancing_copy(x._root);//remember this updates _root
+				if (x._root)
+					non_balancing_copy(x._root);//remember this updates _root
 				update_sentinel_node();
 			}
 			return (*this);
@@ -711,9 +712,9 @@ namespace ft
 			pointer newroot = create_node(oldroot->data);
 			_root = newroot;
 			newroot->height = oldroot->height;
-			if (newroot->left)
+			if (oldroot->left)
 				newroot->left = recursive_non_balancing_copy(oldroot->left, newroot);//make sure that parents are correct
-			if (newroot->right)
+			if (oldroot->right)
 				newroot->right = recursive_non_balancing_copy(oldroot->right, newroot);
 			update_sentinel_node();
 		}
