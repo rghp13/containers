@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 14:39:18 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/15 23:58:49 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:14:12 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 
  #define MAX_RAM 4294967296
  #define BUFFER_SIZE 4096
-/* struct Buffer
+ struct Buffer
  {
  	int idx;
  	char buff[BUFFER_SIZE];
  };
-int main(void)
+/*int main(void)
 {
 	ft::vector<int> qwe;
 	ft::vector<int>::iterator ptr;
@@ -54,7 +54,7 @@ int main(void)
 		ptr++;
 	}
 	std::cout << qwe[600] << std::endl;
-}
+}*/
 
  #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
@@ -106,7 +106,11 @@ int main(int argc, char** argv) {
 		vector_buffer[idx].idx = 5;
 	}
 	ft::vector<Buffer>().swap(vector_buffer);
-
+	ft::vector<int>::iterator qwe = vector_int.end();
+	for (ft::vector<int>::const_iterator it = vector_int.begin(); it != qwe; it++)
+	{
+		std::cout << *it << std::endl;
+	}
 	try
 	{
 		for (int i = 0; i < COUNT; i++)
@@ -148,27 +152,4 @@ int main(int argc, char** argv) {
 	}
 	std::cout << std::endl;
 	return (0);
-}*/
-template <class Key, class T>
-void	print(ft::map<Key, T>& lst)
-{
-	for (typename ft::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
-		std::cout << it->first << " => " << it->second << '\n';
-}
-
-int main ()
-{
-  ft::map<char,int> mymap;
-
-  mymap['a']=10;
-  mymap['b']=20;
-  mymap['c']=30;
-
-  while (!mymap.empty())
-  {
-    std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
-    mymap.erase(mymap.begin());
-  }
-
-  return 0;
 }

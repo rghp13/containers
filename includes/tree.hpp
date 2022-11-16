@@ -6,14 +6,13 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/16 01:34:07 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 17:04:33 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TREE_HPP
 # define TREE_HPP
 #include <memory>
-#include "map_iterator.hpp"
 #include "map.hpp"
 #include "reverse_iterator.hpp"
 namespace ft
@@ -268,13 +267,14 @@ namespace ft
 			_sentinel = _alloc.allocate(1);
 			_alloc.construct(_sentinel, value_type());//avoids incrementing size
 		}
-		tree(const tree &src): _alloc(src._alloc), _comp(src._comp)
+		tree(const tree &src): _alloc(src._alloc), _comp(src._comp), _start(0), _last(0), _root(0), _size(0)
 		{
 			_sentinel = _alloc.allocate(1);
 			_alloc.construct(_sentinel, value_type());
 			//implement a recursive copy function that spreads from the root and doesn't balance because it's a straight copy;
 			pointer ptr = src._root;
-			non_balancing_copy(ptr);
+			if (ptr)
+				non_balancing_copy(ptr);
 			update_sentinel_node();
 		}
 		~tree()
@@ -438,9 +438,7 @@ namespace ft
 		{
 			for (iterator it = begin(); it != end(); it++)
 			{
-				if (_comp(val, *it))
-					continue;
-				else
+				if (!_comp(*it, val))
 					return (it);
 			}
 			return (end());
@@ -449,9 +447,7 @@ namespace ft
 		{
 			for (const_iterator it = begin(); it != end(); it++)
 			{
-				if (_comp(val, *it))
-					continue;
-				else
+				if (!_comp(*it, val))
 					return (it);
 			}
 			return (end());
@@ -460,7 +456,7 @@ namespace ft
 		{
 			for (iterator it = begin(); it != end(); it++)//1
 			{
-				if (_comp(*it, val))//1 < 10 which means 10 is greater than
+				if (_comp(val, *it))//1 < 10 which means 10 is greater than
 					return (it);
 			}
 			return (end());
@@ -469,7 +465,7 @@ namespace ft
 		{
 			for (const_iterator it = begin(); it != end(); it++)
 			{
-				if (_comp(*it, val))
+				if (_comp(val, *it))
 					return (it);
 			}
 			return (end());

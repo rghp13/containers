@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/15 01:42:34 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:25:13 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <memory>//allocator
 #include <exception>
 #include <iterator>
-#include "iterator.hpp"
 #include "iterator_traits.hpp"
 #include "reverse_iterator.hpp"
 #include "lexicographical_compare.hpp"
@@ -42,7 +41,7 @@ namespace ft
 		typedef typename allocator_type::size_type						size_type;
 		typedef typename allocator_type::difference_type				difference_type;
 
-		template <class Tt, bool isconst = false>
+		template <class Tt/**/, bool isconst = false>
 		class	random_access_iterator : public ft::iterator<std::random_access_iterator_tag, Tt>
 		{
 
@@ -72,7 +71,12 @@ namespace ft
 				return (*this);
 			}
 			//
-			operator random_access_iterator<const Tt, true>() const//conversion from non-const to const
+			/*template <bool B>
+			random_access_iterator(const random_access_iterator<Tt, B> &src, typename ft::enable_if<!B>::type* = 0)
+			{
+				_M_current = src._M_current;
+			}*/
+			operator random_access_iterator<const Tt, true>()const//conversion from non-const to const
 			{
 				return (random_access_iterator<const Tt, true>(_M_current));
 			}
@@ -146,27 +150,27 @@ namespace ft
 			{
 				return (_M_current >= &(*src));
 			}
-			bool operator==(random_access_iterator<Tt, true> src)const
+			bool operator==(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current == &(*src));
 			}
-			bool operator!=(random_access_iterator<Tt, true> src)const
+			bool operator!=(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current != &(*src));
 			}
-			bool operator<(random_access_iterator<Tt, true> src)const
+			bool operator<(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current < &(*src));
 			}
-			bool operator<=(random_access_iterator<Tt, true> src)const
+			bool operator<=(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current <= &(*src));
 			}
-			bool operator>(random_access_iterator<Tt, true> src)const
+			bool operator>(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current > &(*src));
 			}
-			bool operator>=(random_access_iterator<Tt, true> src)const
+			bool operator>=(random_access_iterator<const Tt, true> src)const
 			{
 				return (_M_current >= &(*src));
 			}
@@ -505,7 +509,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 	template <class T, class Alloc>
 	bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)

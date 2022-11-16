@@ -6,13 +6,12 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 23:25:45 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/15 22:39:30 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/16 15:41:12 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
-#include "iterator.hpp"
 #include "iterator_traits.hpp"
 namespace ft
 {

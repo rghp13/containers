@@ -7,7 +7,7 @@ BLUE = \033[0;34m
 BOLD = \033[1m
 CYAN = \033[36m
 
-SRC_NAME				=		main.cpp
+SRC_NAME				=		main2.cpp
 INCLUDES				=		./
 NAME					=		containers
 OBJ_NAME				=		$(SRC_NAME:.cpp=.o)
