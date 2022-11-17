@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/16 16:25:13 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/17 03:56:04 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace ft
 		typedef typename allocator_type::size_type						size_type;
 		typedef typename allocator_type::difference_type				difference_type;
 
-		template <class Tt/**/, bool isconst = false>
+		template <class Tt, bool isconst = false>
 		class	random_access_iterator : public ft::iterator<std::random_access_iterator_tag, Tt>
 		{
 
@@ -175,6 +175,11 @@ namespace ft
 				return (_M_current >= &(*src));
 			}
 		};
+		template<typename ItT, bool isconst>
+		friend random_access_iterator<ItT, isconst> operator+(typename random_access_iterator<ItT, isconst>::difference_type dif, random_access_iterator<ItT, isconst> const &src)
+		{
+			return (random_access_iterator<ItT, isconst>(src + dif));
+		}//added to handle int + iterator cases had to add friend for type access
 		typedef random_access_iterator<value_type>				iterator;
 		typedef random_access_iterator<const value_type, true>	const_iterator;
 		typedef ft::reverse_iterator<iterator>					reverse_iterator;
@@ -220,7 +225,7 @@ namespace ft
 			_capacity = 0;
 			reserve(x._capacity);
 			//move data over here
-			assign(x.begin(), x.end());//think about capacity
+			assign(x.begin(), x.end());
 			//update all vars
 			return (*this);
 		}
@@ -240,8 +245,8 @@ namespace ft
 			size_type n = std::distance(first, last);//including the element pointed by first but not the element pointed by last.
 			if (n > _capacity)
 				reserve(n);
-			for (size_type i = 0; i < n; i++, first++)
-				_alloc.construct(&_ptr[i], *first);
+			for (size_type i = 0; first != last; first++)
+				_alloc.construct(&_ptr[i++], *first);
 			_size = n;
 		}
 		allocator_type	get_allocator(void) const
@@ -280,7 +285,7 @@ namespace ft
 		}
 		const_reverse_iterator rend(void)const
 		{
-			return (reverse_iterator(_ptr + _size));
+			return (const_reverse_iterator(_ptr));
 		}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Capacity
@@ -407,8 +412,8 @@ namespace ft
 			size_type n = l - f;
 			for (size_type i = f; i < l; i++)
 				_alloc.destroy(&_ptr[i]);
-			if (l != _size - n)//can't shiftl because shiftl starts at first valid and there's no valid if l == size
-				shiftl(l, n);//this might leave a blank space need to test this
+			if (last != end())//dont shift if last is end
+				shiftl(l, n);//
 			_size -= n;
 			return (first);
 		}

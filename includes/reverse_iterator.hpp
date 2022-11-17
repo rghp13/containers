@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 23:25:45 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/16 15:41:12 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/17 03:44:07 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,11 +142,11 @@ namespace ft
 	{
 		return (rev_it + n);
 	}
-	//example == ft::ft::reverse_iterator<ft::vector<int>::iterator> it2 { 2 + it1}//it1 is some other iterator
+	//example == ft::reverse_iterator<ft::vector<int>::iterator> it2 { 2 + it1}//it1 is some other iterator
 	template <class Iterator>
 	ft::reverse_iterator<Iterator> operator-(typename ft::reverse_iterator<Iterator>::difference_type n, const ft::reverse_iterator<Iterator> &rev_it)
 	{
-		return (rev_it - n);
+		return (rev_it.base() - n);
 	}
 	//added to pass testers but is technically c++11
 	template <class iter1, class iter2>
