@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 18:07:06 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/13 21:40:40 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/17 18:22:43 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace ft
 	//constructors
 	explicit	stack(const container_type &ctnr = container_type()): c(ctnr) {}
 				stack(const stack	&other): c(other.c) {}
-				//~stack(void) {}for some reasons stacks don't need destructors?
+				~stack(void) {}//for some reasons stacks don't need destructors?
 				//member functions size,empty,top,push,pop
 		protected:
 		container_type c;

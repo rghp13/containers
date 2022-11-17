@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 16:48:59 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/17 03:56:04 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/17 17:39:50 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,7 +382,7 @@ namespace ft
 				_alloc.construct(&_ptr[i], val);
 			_size += n;
 		}
-		template <class InputIterator>//why is this using enable_if
+		template <class InputIterator>
 		void insert(iterator pos, InputIterator first, InputIterator last, 
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)//range
 		{
@@ -472,6 +472,14 @@ namespace ft
 		const_reference back(void) const
 		{
 			return (_ptr[_size - 1]);
+		}
+		pointer data(void)
+		{
+			return (_ptr);
+		}
+		const_pointer data(void)const
+		{
+			return (_ptr);
 		}
 		private:
 		void shiftr(size_type start, size_type n)//make sure that there is space to shift before calling function
