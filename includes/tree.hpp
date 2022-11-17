@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/16 17:04:33 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:45:31 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ namespace ft
 			public:
 			typedef Tt											value_type;
 			typedef Tt&											reference;
+			typedef const Tt&									const_reference;
+			typedef const Tt*									const_pointer;
 			typedef Tt*											pointer;
 			typedef std::bidirectional_iterator_tag				iterator_category;
 			typedef ptrdiff_t									difference_type;
@@ -167,9 +169,9 @@ namespace ft
 				return (*this);
 			}
 			reference				operator*()			{return(_ptr->data);}
-			//const reference			operator*()const	{return(_ptr->data);}
+			const_reference			operator*()const	{return(_ptr->data);}
 			pointer					operator->()		{return(&_ptr->data);}
-			pointer					operator->()const	{return(&_ptr->data);}
+			const_pointer					operator->()const	{return(&_ptr->data);}
 			operator bidirectional_iterator<const Tt, true>()//conversion from non-const to const
 			{
 				return (bidirectional_iterator<const Tt, true>(_ptr, _sentinel));

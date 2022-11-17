@@ -11,9 +11,9 @@ SRC_NAME				=		main.cpp
 INCLUDES				=		./
 NAME					=		containers
 OBJ_NAME				=		$(SRC_NAME:.cpp=.o)
-CC						=		c++
+CC						=		clang++
 RM						=		rm -f
-CFLAG					=		-Wall -Wextra -Werror -std=c++98 -g
+CFLAG					=		-Wall -Wextra -Werror -std=c++98
 SRC						=		$(SRC_NAME)
 OBJ						=		$(OBJ_NAME)
 
