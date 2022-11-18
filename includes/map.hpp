@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/18 15:00:30 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:27:09 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft
 		class value_compare : public std::binary_function<value_type, value_type, bool>
 		{
 			friend class map<Key, T, Compare, Alloc>;
-			friend class ft::tree<value_type, value_compare, allocator_type>;
+			//friend class ft::tree<value_type, value_compare, allocator_type>;
 			protected:
 			key_compare	comp;
 			value_compare(key_compare c): comp(c) {}
