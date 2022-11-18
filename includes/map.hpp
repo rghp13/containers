@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:23:49 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/17 14:53:58 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:00:30 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft
 		class value_compare : public std::binary_function<value_type, value_type, bool>
 		{
 			friend class map<Key, T, Compare, Alloc>;
-			friend class ft::tree<value_type, value_compare>;
+			friend class ft::tree<value_type, value_compare, allocator_type>;
 			protected:
 			key_compare	comp;
 			value_compare(key_compare c): comp(c) {}
@@ -56,17 +56,17 @@ namespace ft
 				return comp(x.first, y.first);//returns true if x is smaller
 			}
 		};
-		typedef typename ft::tree<value_type, value_compare>::iterator					iterator;//need to include these in tree class
-		typedef typename ft::tree<value_type, value_compare>::const_iterator			const_iterator;
-		typedef typename ft::tree<value_type, value_compare>::reverse_iterator			reverse_iterator;
-		typedef typename ft::tree<value_type, value_compare>::const_reverse_iterator	const_reverse_iterator;
+		typedef typename ft::tree<value_type, value_compare, allocator_type>::iterator					iterator;//need to include these in tree class
+		typedef typename ft::tree<value_type, value_compare, allocator_type>::const_iterator			const_iterator;
+		typedef typename ft::tree<value_type, value_compare, allocator_type>::reverse_iterator			reverse_iterator;
+		typedef typename ft::tree<value_type, value_compare, allocator_type>::const_reverse_iterator	const_reverse_iterator;
 		typedef typename allocator_type::size_type						size_type;
 		typedef typename allocator_type::difference_type				difference_type;
 		private:
 		key_compare						_key_comp;
 		allocator_type					_alloc;
 		value_compare					_value_comp;//
-		tree<value_type, value_compare>	_tree;
+		tree<value_type, value_compare, allocator_type>	_tree;
 		public:
 		explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()): _key_comp(comp), _alloc(alloc), _value_comp(key_compare(comp)), _tree(_value_comp) {}
 		/*{

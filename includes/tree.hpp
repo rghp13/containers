@@ -6,7 +6,7 @@
 /*   By: rponsonn <rponsonn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 13:10:34 by rponsonn          #+#    #+#             */
-/*   Updated: 2022/11/17 20:45:31 by rponsonn         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:10:35 by rponsonn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace ft
 	//AVL pros and cons vs RB + great if frequent search and not many insertions
 	//std::less == Function object for performing comparisons. Unless specialized, invokes operator< on type T
 	//template <class T>
-	template <class T, class compare >
+	template <class T, class compare, class Alloc>
 	class tree
 	{
 		template <class T1>
@@ -128,7 +128,7 @@ namespace ft
 		typedef typename T::first_type															key_type;//added typename
 		typedef typename T::second_type															mapped_type;//you might not need this, leave it to map to return the value
 		typedef compare																			key_comp;
-		typedef std::allocator<node_type>														allocator_type;//the allocator is tailored to the node
+		typedef typename Alloc::template rebind<node_type>::other									allocator_type;//the allocator is tailored to the node
 		typedef typename allocator_type::reference												reference;//node referrences
 		typedef typename allocator_type::const_reference										const_reference;
 		typedef typename allocator_type::pointer												pointer;//points to nodes
